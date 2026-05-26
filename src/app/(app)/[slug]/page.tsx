@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
-import { RenderHero } from '@/heros/RenderHero'
+import { homeStaticData } from '@/endpoints/seed/home-static'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
-import { homeStaticData } from '@/endpoints/seed/home-static'
-import React from 'react'
+import { getPayload } from 'payload'
 
 import type { Page } from '@/payload-types'
 import { notFound } from 'next/navigation'
+
+import HeroSection from '@/components/HeroSection'
+import ShopByCategory from '@/components/ShopByCategory'
+import FAQSection from '@/components/ui/FAQSection'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -63,8 +65,17 @@ export default async function Page({ params }: Args) {
 
   return (
     <article className="pt-16 pb-24">
-      <RenderHero {...hero} />
+      {/* <RenderHero {...hero} /> */}
       <RenderBlocks blocks={layout} />
+
+      {/* 2. Render only on the home page right here */}
+      {slug === 'home' && (
+        <>
+          <HeroSection />
+          <ShopByCategory />
+          <FAQSection />
+        </>
+      )}
     </article>
   )
 }

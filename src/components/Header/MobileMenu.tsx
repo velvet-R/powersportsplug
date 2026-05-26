@@ -1,111 +1,243 @@
 'use client'
 
-import type { Header } from '@/payload-types'
-
-import { CMSLink } from '@/components/Link'
-import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { useAuth } from '@/providers/Auth'
-import { MenuIcon } from 'lucide-react'
+import { ChevronDown, PhoneCall, X } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
-interface Props {
-  menu: Header['navItems']
+interface MobileMenuProps {
+  isOpen: boolean
+  onClose: () => void
+  isLoggedIn: boolean
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function MobileMenu({ menu }: Props) {
-  const { user } = useAuth()
+type AccordionKeys = 'shop' | 'finance' | null
 
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const [isOpen, setIsOpen] = useState(false)
+interface MobileSubLink {
+  label: string
+  href: string
+  highlight?: boolean
+}
 
-  const closeMobileMenu = () => setIsOpen(false)
+const shopLinks: MobileSubLink[] = [
+  { label: 'All Inventory', href: '/inventory' },
+  { label: 'New ATVs', href: '/inventory/new' },
+  { label: 'Used ATVs', href: '/inventory/used' },
+  { label: 'Performance Upgrades', href: '/parts/upgrades' },
+]
+
+const financeLinks: MobileSubLink[] = [
+  { label: 'Apply Now — No Credit Check', href: '/finance/apply', highlight: true },
+  { label: 'How Financing Works', href: '/finance/process' },
+  { label: 'Payment Calculator', href: '/finance/calculator' },
+]
+
+export default function MobileMenu({
+  isOpen,
+  onClose,
+  isLoggedIn,
+  setIsLoggedIn,
+}: MobileMenuProps): React.JSX.Element | null {
+  const [activeAccordion, setActiveAccordion] = useState<AccordionKeys>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsOpen(false)
-      }
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    setMounted(true)
+  }, [])
+  useEffect(() => {
+    if (!isOpen) setActiveAccordion(null)
   }, [isOpen])
 
-  useEffect(() => {
-    setIsOpen(false)
-  }, [pathname, searchParams])
+  const toggleAccordion = (key: AccordionKeys) => {
+    setActiveAccordion(activeAccordion === key ? null : key)
+  }
 
-  return (
-    <Sheet onOpenChange={setIsOpen} open={isOpen}>
-      <SheetTrigger className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors dark:border-neutral-700 dark:bg-black dark:text-white">
-        <MenuIcon className="h-4" />
-      </SheetTrigger>
+  if (!mounted) return null
 
-      <SheetContent side="left" className="px-4">
-        <SheetHeader className="px-0 pt-4 pb-0">
-          <SheetTitle>My Store</SheetTitle>
+  const drawer = (
+    <div
+      className={`fixed inset-0 z-[200] flex justify-end lg:hidden transition-opacity duration-300 ${
+        isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-          <SheetDescription />
-        </SheetHeader>
-
-        <div className="py-4">
-          {menu?.length ? (
-            <ul className="flex w-full flex-col">
-              {menu.map((item) => (
-                <li className="py-2" key={item.id}>
-                  <CMSLink {...item.link} appearance="link" />
-                </li>
-              ))}
-            </ul>
-          ) : null}
+      {/* Drawer */}
+      <div
+        className={`relative w-[300px] h-full bg-surface border-l border-border flex flex-col p-5 overflow-y-auto shadow-card-hover transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* ── Top: logo + close only ── */}
+        <div className="flex items-center justify-between border-b border-border pb-4 mb-5">
+          <span className="font-display text-lg font-black uppercase tracking-tight text-foreground">
+            POWERSPORTS<span className="text-primary-hover">HUB</span>
+          </span>
+          <button
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded border border-border bg-background text-muted-foreground hover:text-primary-hover hover:border-primary-hover transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        {user ? (
-          <div className="mt-4">
-            <h2 className="text-xl mb-4">My account</h2>
-            <hr className="my-2" />
-            <ul className="flex flex-col gap-2">
-              <li>
-                <Link href="/orders">Orders</Link>
-              </li>
-              <li>
-                <Link href="/account/addresses">Addresses</Link>
-              </li>
-              <li>
-                <Link href="/account">Manage account</Link>
-              </li>
-              <li className="mt-6">
-                <Button asChild variant="outline">
-                  <Link href="/logout">Log out</Link>
-                </Button>
-              </li>
-            </ul>
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-xl mb-4">My account</h2>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Button asChild className="w-full sm:flex-1" variant="outline">
-                <Link href="/login">Log in</Link>
-              </Button>
-              <span className="text-center text-sm text-muted-foreground sm:text-base">or</span>
-              <Button asChild className="w-full sm:flex-1">
-                <Link href="/create-account">Create an account</Link>
-              </Button>
+        {/* ── Nav items ── */}
+        <nav className="flex flex-col flex-1">
+          <Link
+            href="/"
+            onClick={onClose}
+            className="font-display text-xs font-bold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-3 border-b border-border/40 transition-colors"
+          >
+            Home
+          </Link>
+
+          {/* Shop Accordion */}
+          <div className="border-b border-border/40">
+            <button
+              onClick={() => toggleAccordion('shop')}
+              className="flex w-full items-center justify-between font-display text-xs font-bold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-3 transition-colors cursor-pointer"
+            >
+              <span>Shop ATVs</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  activeAccordion === 'shop' ? 'rotate-180 text-primary-hover' : 'text-subtle'
+                }`}
+              />
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                activeAccordion === 'shop' ? 'max-h-48 pb-2' : 'max-h-0'
+              }`}
+            >
+              <div className="flex flex-col border-l-2 border-primary-hover/40 ml-1 pl-3">
+                {shopLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={onClose}
+                    className="font-display text-[11px] font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-2 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        )}
-      </SheetContent>
-    </Sheet>
+
+          {/* Finance Accordion */}
+          <div className="border-b border-border/40">
+            <button
+              onClick={() => toggleAccordion('finance')}
+              className="flex w-full items-center justify-between font-display text-xs font-bold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-3 transition-colors cursor-pointer"
+            >
+              <span>Financing</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  activeAccordion === 'finance' ? 'rotate-180 text-primary-hover' : 'text-subtle'
+                }`}
+              />
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                activeAccordion === 'finance' ? 'max-h-48 pb-2' : 'max-h-0'
+              }`}
+            >
+              <div className="flex flex-col border-l-2 border-primary-hover/40 ml-1 pl-3">
+                {financeLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={onClose}
+                    className={`font-display text-[11px] font-semibold tracking-widest uppercase py-2 transition-colors ${
+                      link.highlight
+                        ? 'text-primary-hover/50 bg-accent/10 px-2 rounded-sm hover:text-primary-hover hover:bg-accent/20'
+                        : 'text-muted-foreground hover:text-primary-hover'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {['About', 'Blog', 'Reviews', 'Contact'].map((item) => (
+            <Link
+              key={item}
+              href={`/${item.toLowerCase()}`}
+              onClick={onClose}
+              className="font-display text-xs font-bold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-3 border-b border-border/40 transition-colors"
+            >
+              {item}
+            </Link>
+          ))}
+
+          {/* ── Actions — below nav items ── */}
+          <div className="flex flex-col gap-3 mt-6">
+            {/* Apply Now — primary CTA */}
+            <Link
+              href="/finance/apply"
+              onClick={onClose}
+              className="flex items-center justify-center w-full bg-primary-hover hover:bg-primary text-white py-2.5 rounded font-display text-xs font-bold tracking-widest uppercase transition-colors active:scale-95"
+            >
+              Apply Online Now
+            </Link>
+
+            {/* Call button */}
+            <button
+              onClick={() => {
+                window.location.href = 'tel:8005557433'
+              }}
+              className="flex items-center justify-center gap-2 w-full bg-background border border-border hover:border-primary-hover rounded py-2.5 transition-colors group cursor-pointer"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-primary-hover" />
+              <span className="font-display text-[11px] font-bold tracking-widest uppercase text-foreground group-hover:text-primary-hover transition-colors">
+                Call Now
+              </span>
+              <span className="font-mono text-[11px] text-muted-foreground group-hover:text-primary-hover transition-colors">
+                (800) 555-RIDE
+              </span>
+            </button>
+
+            {/* Auth */}
+            {isLoggedIn ? (
+              <div className="flex flex-col gap-2">
+                <Link
+                  href="/account"
+                  onClick={onClose}
+                  className="text-center font-display text-[11px] font-bold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-1 transition-colors"
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsLoggedIn(false)
+                    onClose()
+                  }}
+                  className="w-full py-2 border border-status-sold/40 text-status-sold hover:bg-status-sold/10 font-display text-[11px] font-bold tracking-widest uppercase rounded transition-colors cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsLoggedIn(true)
+                  onClose()
+                }}
+                className="w-full py-2.5 bg-background border border-border hover:border-primary-hover text-muted-foreground hover:text-primary-hover font-display text-[11px] font-bold tracking-widest uppercase rounded transition-colors cursor-pointer"
+              >
+                Login / Register
+              </button>
+            )}
+          </div>
+        </nav>
+      </div>
+    </div>
   )
+
+  return createPortal(drawer, document.body)
 }

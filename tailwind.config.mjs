@@ -1,13 +1,19 @@
-const plugin = require('tailwindcss/plugin')
+import plugin from 'tailwindcss/plugin'
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Merged content tracks to accommodate standard Next.js layouts, standard Payload subdirectories, and root components
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './app/**/*.{js,jsx,ts,tsx,mdx}',
+    './components/**/*.{js,jsx,ts,tsx,mdx}',
+    './pages/**/*.{js,jsx,ts,tsx,mdx}',
+    './src/**/*.{js,jsx,ts,tsx,mdx}',
   ],
+
+  // Preserves Payload's explicit administrative layout selection styling
   darkMode: ['selector', '[data-theme="dark"]'],
+
+  // Fully merged administrative layout components and custom asset safelist rules
   safelist: [
     'lg:col-span-4',
     'lg:col-span-6',
@@ -15,14 +21,22 @@ export default {
     'lg:col-span-12',
     'border-border',
     'bg-card',
+    'bg-surface',
     'border-error',
     'bg-error/30',
     'border-success',
     'bg-success/30',
     'border-warning',
     'bg-warning/30',
+    'text-status-available',
+    'text-status-on-order',
+    'text-status-sold',
+    'bg-condition-new',
+    'bg-condition-used',
   ],
+
   theme: {
+    // Retains Payload's layout grid containers for proper dashboard rendering
     container: {
       center: true,
       padding: {
@@ -41,103 +55,113 @@ export default {
         xl: '80rem',
       },
     },
+
     extend: {
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
       colors: {
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        background: 'hsl(var(--background))',
-        border: 'hsl(var(--border))',
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        foreground: 'hsl(var(--foreground))',
-        input: 'hsl(var(--input))',
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
+        // Core dark motorsport palette integration
+        background: '#0F0F12',
+        surface: '#1C1C24',
+        border: '#27272A',
+        'border-hover': '#3F3F46',
+
+        // Primary accent: blazing racing orange
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#FF4500',
+          hover: '#FF5722',
+          muted: '#FF450022',
+          foreground: '#FFFFFF',
         },
-        ring: 'hsl(var(--ring))',
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+
+        // Utility accent: yellow/gold for badges and ratings
+        accent: {
+          DEFAULT: '#FFB703',
+          foreground: '#0F0F12',
         },
-        success: 'hsl(var(--success))',
-        error: 'hsl(var(--error))',
-        warning: 'hsl(var(--warning))',
+
+        // Text hierarchy matching your specification
+        foreground: '#F4F4F5',
+        'muted-foreground': '#A1A1AA',
+        subtle: '#52525B',
+
+        // Dedicated status and condition tokens for powersports catalog states
+        'status-available': '#22C55E',
+        'status-on-order': '#FFB703',
+        'status-sold': '#EF4444',
+        'condition-new': '#3B82F6',
+        'condition-used': '#78716C',
+
+        // Retaining fallback aliases for standard administrative interfaces
+        card: {
+          DEFAULT: '#1C1C24',
+          foreground: '#F4F4F5',
+        },
+        success: '#22C55E',
+        error: '#EF4444',
+        warning: '#FFB703',
       },
-      typography: {
-        DEFAULT: {
-          css: {
-            '--tw-prose-body': 'var(--text)',
-            '--tw-prose-headings': 'var(--text)',
-            h1: {
-              fontSize: '4rem',
-              fontWeight: 'normal',
-              marginBottom: '0.25em',
-            },
-            a: {
-              color: 'inherit',
-            },
-          },
-        },
+
+      // Merging your fluid typography scaling directly with standard line heights
+      fontSize: {
+        hero: ['clamp(3rem, 8vw, 7rem)', { lineHeight: '0.9', letterSpacing: '-0.02em' }],
+        section: ['clamp(1.75rem, 4vw, 3rem)', { lineHeight: '1', letterSpacing: '-0.01em' }],
+        card: ['clamp(1rem, 2vw, 1.25rem)', { lineHeight: '1.2' }],
       },
+
+      // Sharp, micro-radius definitions to drive the aggressive motorsport design system
+      borderRadius: {
+        DEFAULT: '4px',
+        sm: '2px',
+        md: '6px',
+        lg: '8px',
+        xl: '12px',
+        full: '9999px',
+      },
+
+      // Immersive glowing textures for interaction states and asset badges
+      boxShadow: {
+        'glow-orange': '0 0 20px rgba(255, 69, 0, 0.35)',
+        'glow-gold': '0 0 16px rgba(255, 183, 3, 0.3)',
+        card: '0 4px 24px rgba(0,0,0,0.4)',
+        'card-hover': '0 8px 40px rgba(0,0,0,0.6)',
+      },
+
+      // High-performance background layouts
+      backgroundImage: {
+        'grid-dark':
+          "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v1H0zm0 39h40v1H0zM0 0v40h1V0zm39 0v40h1V0z' fill='%2327272A' fill-opacity='0.4'/%3E%3C/svg%3E\")",
+        'hero-gradient': 'linear-gradient(135deg, #0F0F12 0%, #1a0a00 50%, #0F0F12 100%)',
+        'card-gradient': 'linear-gradient(180deg, transparent 60%, rgba(15,15,18,0.95) 100%)',
+        'orange-glow':
+          'radial-gradient(ellipse at center, rgba(255,69,0,0.15) 0%, transparent 70%)',
+      },
+
+      // Clean typography system using your CSS variables
       fontFamily: {
-        mono: ['var(--font-geist-mono)'],
-        sans: ['var(--font-geist-sans)'],
+        display: ['"Barlow Condensed"', '"Oswald"', 'sans-serif'],
+        body: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
+
+      // Merged keyframes tracking system
       keyframes: {
-        fadeIn: {
-          from: { opacity: 0 },
-          to: { opacity: 1 },
+        fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
+        fadeOut: { from: { opacity: '1' }, to: { opacity: '0' } },
+        slideUp: {
+          from: { opacity: '0', transform: 'translateY(24px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
-        fadeOut: {
-          from: { opacity: 1 },
-          to: { opacity: 0 },
+        scaleIn: {
+          from: { opacity: '0', transform: 'scale(0.95)' },
+          to: { opacity: '1', transform: 'scale(1)' },
         },
-        in: {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(0%)' },
+        pulseGlow: {
+          '0%,100%': { boxShadow: '0 0 10px rgba(255,69,0,0.3)' },
+          '50%': { boxShadow: '0 0 30px rgba(255,69,0,0.6)' },
         },
-        out: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(100%)' },
-        },
-        'slide-in-from-left': {
-          from: { transform: 'translateX(-100%)' },
-          to: { transform: 'translateX(0)' },
-        },
-        'slide-out-to-left': {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(-100%)' },
-        },
-        'slide-in-from-right': {
-          from: { transform: 'translateX(100%)' },
-          to: { transform: 'translateX(0)' },
-        },
-        'slide-out-to-right': {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(100%)' },
-        },
+        ticker: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        in: { '0%': { transform: 'translateX(100%)' }, '100%': { transform: 'translateX(0%)' } },
+        out: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(100%)' } },
         'accordion-down': {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
@@ -146,37 +170,54 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
-        marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-        blink: {
-          '0%': { opacity: 0.2 },
-          '20%': { opacity: 1 },
-          '100% ': { opacity: 0.2 },
-        },
+        blink: { '0%, 100%': { opacity: '0.2' }, '20%': { opacity: '1' } },
       },
+
+      // Merged animation presets
       animation: {
+        'fade-in': 'fadeIn 0.4s ease forwards',
+        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'scale-in': 'scaleIn 0.3s ease forwards',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        ticker: 'ticker 30s linear infinite',
         in: 'in 0.2s ease-out',
         out: 'out 0.2s ease-out',
-        fadeIn: 'fadeIn .3s ease-in-out',
-        fadeOut: 'fadeOut .3s ease-in-out',
-        carousel: 'marquee 60s linear infinite',
-        'slide-in-from-left': 'slide-in-from-left 0.2s ease-out',
-        'slide-out-to-left': 'slide-out-to-left 0.2s ease-out',
-        'slide-in-from-right': 'slide-in-from-right 0.2s ease-out',
-        'slide-out-to-right': 'slide-out-to-right 0.2s ease-out',
+        carousel: 'ticker 60s linear infinite',
         blink: 'blink 1.4s both infinite',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+
+      // Standard prose integration
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': '#F4F4F5',
+            '--tw-prose-headings': '#F4F4F5',
+            h1: {
+              fontFamily: '"Barlow Condensed", "Oswald", sans-serif',
+              textTransform: 'uppercase',
+              fontWeight: '700',
+            },
+            a: {
+              color: '#FF4500',
+              '&:hover': {
+                color: '#FF5722',
+              },
+            },
+          },
+        },
+      },
     },
   },
+
   future: {
     hoverOnlyWhenSupported: true,
   },
+
   plugins: [
     require('@tailwindcss/typography'),
+    // Unified functional delay utility plugin matching scaffold output
     plugin(({ matchUtilities, theme }) => {
       matchUtilities(
         {
