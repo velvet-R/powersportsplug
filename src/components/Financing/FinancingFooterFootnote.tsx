@@ -18,7 +18,7 @@ export default function FinancingFooterFootnote(): React.JSX.Element {
           INTAKE_SUPPORT:{' '}
           <a
             href="mailto:info@offroadpowersportshub.com"
-            className="text-purple-400 hover:underline"
+            className="text-primary-hover hover:underline"
           >
             info@offroadpowersportshub.com
           </a>

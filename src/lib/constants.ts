@@ -774,3 +774,72 @@ export const APPLICANT_CHECKLIST = [
   'Active phone number & email',
   'Down payment (if applicable)',
 ]
+
+// src/lib/financing-overview-data.ts
+
+import {
+  DollarSign,
+  FileSpreadsheet,
+  ShieldAlert,
+  UserCheck
+} from 'lucide-react'
+
+export const PILL_BENEFITS = [
+  { text: 'No credit check required', icon: ShieldCheck },
+  { text: 'No bank approvals', icon: UserCheck },
+  { text: 'Fast and easy application', icon: Zap },
+  { text: 'Flexible payment plans', icon: FileSpreadsheet },
+]
+
+export const WORKFLOW_STEPS = [
+  {
+    num: '01',
+    title: 'Choose Your ATV',
+    text: 'Pick the four-wheeler that fits your lifestyle and budget.',
+    icon: Bike,
+  },
+  {
+    num: '02',
+    title: 'Make a Down Payment',
+    text: 'Secure your ATV with an affordable upfront payment.',
+    icon: DollarSign,
+  },
+  {
+    num: '03',
+    title: 'Set Your Payment Plan',
+    text: "We'll divide the remaining balance into manageable payments.",
+    icon: Calendar,
+  },
+  {
+    num: '04',
+    title: 'Ride Today',
+    text: 'Once your down payment is complete, your ATV is ready to go.',
+    icon: Zap,
+  },
+]
+
+export const FREQUENCY_CARDS = [
+  {
+    title: 'Weekly, Bi-Weekly, or Monthly',
+    text: 'Choose the payment frequency that fits your schedule and cash flow.',
+    icon: Calendar,
+  },
+  {
+    title: 'Short-Term & Extended Options',
+    text: 'Whether you want to pay it off fast or spread it out, we have plans for you.',
+    icon: Layers,
+  },
+  {
+    title: 'Easy & Predictable Schedules',
+    text: 'Know exactly what you owe and when. No surprises, no hidden changes.',
+    icon: ShieldAlert,
+  },
+]
+
+export const WHY_CHOOSE_US_CARDS = [
+  { title: 'Ride today, pay over time', icon: Gauge },
+  { title: 'No banks or third-party lenders', icon: ShieldCheck },
+  { title: 'Fast approvals', icon: Zap },
+  { title: 'Flexible plans for any budget', icon: DollarSign },
+  { title: 'Friendly, customer-first service', icon: HeartHandshake },
+]

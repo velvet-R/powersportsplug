@@ -54,6 +54,10 @@
     padding-inline: 1rem;
   }
 
+  .form-input {
+    @apply w-full h-11 bg-zinc-900/60 border border-zinc-800 rounded px-4 font-body text-xs text-white placeholder-zinc-600 focus:outline-hidden focus:border-primary-hover focus:bg-zinc-950 transition-all duration-150;
+  }
+
   @variant sm {
     .container {
       max-width: var(--breakpoint-sm);
