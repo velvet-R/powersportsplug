@@ -1,6 +1,5 @@
 'use client'
 
-import heroImg from '@/public/images/herobanner.jpg'
 import { motion } from 'framer-motion'
 import {
     ArrowRight,
@@ -17,6 +16,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import heroImg from '../../public/images/herobanner.jpg'
 import MarqueeBanner from './MarqueeBanner'
 
 const STATES = [

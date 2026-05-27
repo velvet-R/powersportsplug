@@ -10,9 +10,15 @@ import { getPayload } from 'payload'
 import type { Page } from '@/payload-types'
 import { notFound } from 'next/navigation'
 
+import BlogSection from '@/components/BlogSection'
+import FeaturedProducts from '@/components/FeaturedProducts'
+import FinancingSection from '@/components/FinancingSection'
 import HeroSection from '@/components/HeroSection'
+import ReviewsSection from '@/components/ReviewsSection'
+import ShippingSection from '@/components/ShippingSection'
 import ShopByCategory from '@/components/ShopByCategory'
 import FAQSection from '@/components/ui/FAQSection'
+import WhyChooseUs from '@/components/WhyChooseUs'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -73,6 +79,12 @@ export default async function Page({ params }: Args) {
         <>
           <HeroSection />
           <ShopByCategory />
+          <WhyChooseUs />
+          <FeaturedProducts />
+          <FinancingSection />
+          <ShippingSection />
+          <ReviewsSection />
+          <BlogSection />
           <FAQSection />
         </>
       )}

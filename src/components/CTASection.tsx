@@ -1,9 +1,9 @@
 'use client'
 
-import heroBanner from '@/public/images/herobanner.jpg'
 import { ArrowRight, Mail, PhoneCall } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
+import heroBanner from '../../public/images/herobanner.jpg'
 
 export default function CTASection(): React.JSX.Element {
   const [email, setEmail] = useState('')
