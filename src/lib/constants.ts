@@ -777,12 +777,7 @@ export const APPLICANT_CHECKLIST = [
 
 // src/lib/financing-overview-data.ts
 
-import {
-  DollarSign,
-  FileSpreadsheet,
-  ShieldAlert,
-  UserCheck
-} from 'lucide-react'
+import { DollarSign, FileSpreadsheet, ShieldAlert, UserCheck } from 'lucide-react'
 
 export const PILL_BENEFITS = [
   { text: 'No credit check required', icon: ShieldCheck },
@@ -842,4 +837,57 @@ export const WHY_CHOOSE_US_CARDS = [
   { title: 'Fast approvals', icon: Zap },
   { title: 'Flexible plans for any budget', icon: DollarSign },
   { title: 'Friendly, customer-first service', icon: HeartHandshake },
+]
+
+// src/lib/privacy-data.ts
+
+import { PrivacySection } from '@/types'
+
+export const PRIVACY_REGISTRY: PrivacySection[] = [
+  {
+    tag: 'DATA COLLECTION',
+    title: '1. Information We Securely Collect',
+    intro:
+      'To facilitate our specialized in-house financing programs and process your application in under 5 minutes without traditional third-party credit pulls, we collect specific structural identifiers including:',
+    bullets: [
+      'Personal Identification Profile: Full legal name, date of birth, and the last 2 digits of your Social Security Number (SSN) for secure identity matching.',
+      'Contact Intermediaries: Active telephone numbers and validated email addresses for callback verification routes.',
+      'Physical Residence Tracking: Street address, city, state, zip code, and housing lease or ownership documentation status.',
+      'Financial Proof Inputs: Primary employer identification logs, gross monthly cash inflows, pay stubs, and supplementary bank verification balances.',
+    ],
+  },
+  {
+    tag: 'DATA UTILIZATION',
+    title: '2. How Your Information Is Applied',
+    intro:
+      'Your submitted payload data is processed directly inside our closed application tracking loop. We apply this information to:',
+    bullets: [
+      'Determine matching down payment tiers and map custom payment frequencies (weekly, bi-weekly, or monthly).',
+      'Authorize instant internal in-house application approvals within 1 business day.',
+      'Coordinate home delivery drop-offs across all 50 states.',
+      'Protect our portal systems from fraudulent, automated, or malicious form submittals.',
+    ],
+  },
+  {
+    tag: 'INFORMATION SHARING',
+    title: '3. Data Retention and Non-Disclosure Safeguards',
+    intro:
+      'We treat applicant data with extreme security measures. Unlike traditional power-sports dealerships, we strictly enforce the following policies:',
+    bullets: [
+      'Zero Third-Party Broker Sales: We never sell, lease, or monetize your personal background files to external marketing lists.',
+      'Program Partner Logistics: Information is only disclosed to our trusted internal closing operators or select in-house program partners directly servicing your payment contract.',
+      'Legal Enforcement Mandates: Information is only transferred externally when strictly required by state financial reporting compliance audits or federal legal system demands.',
+    ],
+  },
+  {
+    tag: 'SECURITY ARCHITECTURE',
+    title: '4. Structural Technical Protections',
+    intro:
+      'All form fields, partial social digits, and income sheets are protected by industrial security measures right at the point of entry:',
+    bullets: [
+      'End-to-End Transport Layer Security (TLS) protocol handshakes wrap all input operations.',
+      'Secure internal server storage configurations completely isolated from unauthorized network requests.',
+      'Strict access control walls restricting pipeline access to designated financing analysts.',
+    ],
+  },
 ]

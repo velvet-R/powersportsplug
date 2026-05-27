@@ -14,6 +14,12 @@ export interface Product {
   stockNumber: string
 }
 
+export interface ExtendedProductDetails {
+  description: string
+  features: string[]
+  specs: { label: string; value: string }[]
+}
+
 export interface BlogPost {
   slug: string
   title: string
@@ -53,4 +59,11 @@ export interface FilterState {
   condition: string
   priceRange: [number, number]
   sortBy: string
+}
+
+export interface PrivacySection {
+  tag: string
+  title: string
+  intro?: string
+  bullets?: string[]
 }
