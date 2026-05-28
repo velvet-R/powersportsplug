@@ -1,4 +1,6 @@
 'use client'
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { PhoneCall, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -14,6 +16,7 @@ export default function HeaderCTA({
   setIsLoggedIn,
   variant = 'desktop',
 }: HeaderCTAProps): React.JSX.Element {
+  const companyInfo = useCompanyInfo() as CompanyInfo | null
   if (variant === 'mobile-bar') {
     return (
       <div className="flex items-center gap-2">
@@ -43,7 +46,7 @@ export default function HeaderCTA({
 
       {/* Call Now Action */}
       <a
-        href="tel:8005557433"
+        href={`tel:${companyInfo?.phone}`}
         className="flex items-center gap-1.5 px-4 py-2.5 bg-primary-hover rounded text-white shadow-md shadow-primary-hover/10 hover:bg-primary hover:text-secondary hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 group"
       >
         <PhoneCall className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
@@ -54,7 +57,7 @@ export default function HeaderCTA({
 
       {/* Get Financed Action */}
       <Link
-        href="/finance/apply"
+        href="/financing/apply"
         className="inline-flex items-center justify-center px-5 py-2.5 bg-transparent border border-primary-hover text-primary hover:text-white bg-gradient-to-r from-primary-hover/10 to-transparent hover:from-primary-hover hover:to-primary-hover font-display text-[11px] font-bold tracking-widest uppercase rounded shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-lg hover:shadow-primary-hover/10"
       >
         Get Financed

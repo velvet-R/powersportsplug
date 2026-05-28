@@ -1,5 +1,7 @@
 'use client'
 
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { ChevronDown, PhoneCall, X } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -21,16 +23,16 @@ interface MobileSubLink {
 }
 
 const shopLinks: MobileSubLink[] = [
-  { label: 'All Inventory', href: '/inventory' },
-  { label: 'New ATVs', href: '/inventory/new' },
-  { label: 'Used ATVs', href: '/inventory/used' },
-  { label: 'Performance Upgrades', href: '/parts/upgrades' },
+  { label: 'All Inventory', href: '/shop' },
+  { label: 'New ATVs', href: '/shop' },
+  { label: 'Used ATVs', href: '/shop' },
+  { label: 'Performance Upgrades', href: '/shop' },
 ]
 
 const financeLinks: MobileSubLink[] = [
-  { label: 'Apply Now — No Credit Check', href: '/finance/apply', highlight: true },
-  { label: 'How Financing Works', href: '/finance/process' },
-  { label: 'Payment Calculator', href: '/finance/calculator' },
+  { label: 'Apply Now — No Credit Check', href: '/financing/apply', highlight: true },
+  { label: 'How Financing Works', href: '/financing' },
+  { label: 'Payment Calculator', href: '/financing/apply' },
 ]
 
 export default function MobileMenu({
@@ -41,6 +43,8 @@ export default function MobileMenu({
 }: MobileMenuProps): React.JSX.Element | null {
   const [activeAccordion, setActiveAccordion] = useState<AccordionKeys>(null)
   const [mounted, setMounted] = useState(false)
+
+  const companyInfo = useCompanyInfo() as CompanyInfo | null
 
   useEffect(() => {
     setMounted(true)
@@ -57,7 +61,7 @@ export default function MobileMenu({
 
   const drawer = (
     <div
-      className={`fixed inset-0 z-[200] flex justify-end lg:hidden transition-opacity duration-300 ${
+      className={`fixed inset-0 z-200 flex justify-end lg:hidden transition-opacity duration-300 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
@@ -66,14 +70,15 @@ export default function MobileMenu({
 
       {/* Drawer */}
       <div
-        className={`relative w-[300px] h-full bg-surface border-l border-border flex flex-col p-5 overflow-y-auto shadow-card-hover transition-transform duration-300 ${
+        className={`relative w-75 h-full bg-surface border-l border-border flex flex-col p-5 overflow-y-auto shadow-card-hover transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* ── Top: logo + close only ── */}
         <div className="flex items-center justify-between border-b border-border pb-4 mb-5">
           <span className="font-display text-lg font-black uppercase tracking-tight text-foreground">
-            POWERSPORTS<span className="text-primary-hover">HUB</span>
+            {companyInfo?.companyName || 'Company'}
+            <span className="text-primary-hover">HUB</span>
           </span>
           <button
             onClick={onClose}
@@ -115,7 +120,7 @@ export default function MobileMenu({
               <div className="flex flex-col border-l-2 border-primary-hover/40 ml-1 pl-3">
                 {shopLinks.map((link) => (
                   <Link
-                    key={link.href}
+                    key={link.label}
                     href={link.href}
                     onClick={onClose}
                     className="font-display text-[11px] font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary-hover py-2 transition-colors"
@@ -148,7 +153,7 @@ export default function MobileMenu({
               <div className="flex flex-col border-l-2 border-primary-hover/40 ml-1 pl-3">
                 {financeLinks.map((link) => (
                   <Link
-                    key={link.href}
+                    key={link.label}
                     href={link.href}
                     onClick={onClose}
                     className={`font-display text-[11px] font-semibold tracking-widest uppercase py-2 transition-colors ${
@@ -179,7 +184,7 @@ export default function MobileMenu({
           <div className="flex flex-col gap-3 mt-6">
             {/* Apply Now — primary CTA */}
             <Link
-              href="/finance/apply"
+              href="/financing/apply"
               onClick={onClose}
               className="flex items-center justify-center w-full bg-primary-hover hover:bg-primary text-white py-2.5 rounded font-display text-xs font-bold tracking-widest uppercase transition-colors active:scale-95"
             >
@@ -189,7 +194,7 @@ export default function MobileMenu({
             {/* Call button */}
             <button
               onClick={() => {
-                window.location.href = 'tel:8005557433'
+                window.location.href = `tel:${companyInfo?.phone || '(800) 555-RIDE'}`
               }}
               className="flex items-center justify-center gap-2 w-full bg-background border border-border hover:border-primary-hover rounded py-2.5 transition-colors group cursor-pointer"
             >
@@ -198,7 +203,7 @@ export default function MobileMenu({
                 Call Now
               </span>
               <span className="font-mono text-[11px] text-muted-foreground group-hover:text-primary-hover transition-colors">
-                (800) 555-RIDE
+                {companyInfo?.phone || '(800) 555-RIDE'}
               </span>
             </button>
 
