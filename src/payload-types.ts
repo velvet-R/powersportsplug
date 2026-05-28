@@ -131,10 +131,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'company-info': CompanyInfo;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'company-info': CompanyInfoSelect<false> | CompanyInfoSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1836,6 +1838,21 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-info".
+ */
+export interface CompanyInfo {
+  id: number;
+  companyName: string;
+  email: string;
+  phone?: string | null;
+  address?: string | null;
+  description?: string | null;
+  logo?: (number | null) | Media;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1876,6 +1893,21 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-info_select".
+ */
+export interface CompanyInfoSelect<T extends boolean = true> {
+  companyName?: T;
+  email?: T;
+  phone?: T;
+  address?: T;
+  description?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

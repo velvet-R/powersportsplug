@@ -1,15 +1,15 @@
-import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest, File } from 'payload'
+import type { CollectionSlug, File, GlobalSlug, Payload, PayloadRequest } from 'payload'
 
+import { Address, Transaction, VariantOption } from '@/payload-types'
 import { contactFormData } from './contact-form'
 import { contactPageData } from './contact-page'
-import { productHatData } from './product-hat'
-import { productTshirtData, productTshirtVariant } from './product-tshirt'
 import { homePageData } from './home'
 import { imageHatData } from './image-hat'
+import { imageHero1Data } from './image-hero-1'
 import { imageTshirtBlackData } from './image-tshirt-black'
 import { imageTshirtWhiteData } from './image-tshirt-white'
-import { imageHero1Data } from './image-hero-1'
-import { Address, Transaction, VariantOption } from '@/payload-types'
+import { productHatData } from './product-hat'
+import { productTshirtData, productTshirtVariant } from './product-tshirt'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -41,7 +41,7 @@ const colorVariantOptions = [
   { label: 'White', value: 'white' },
 ]
 
-const globals: GlobalSlug[] = ['header', 'footer']
+const globals: GlobalSlug[] = ['header', 'footer', 'company-info']
 
 const baseAddressUSData: Transaction['billingAddress'] = {
   title: 'Dr.',
@@ -87,20 +87,40 @@ export const seed = async ({
   // the custom `/api/seed` endpoint does not
   payload.logger.info(`— Clearing collections and globals...`)
 
-  // clear the database
+  // Use Promise.all to wait for all updates to finish
   await Promise.all(
-    globals.map((global) =>
-      payload.updateGlobal({
-        slug: global,
-        data: {
-          navItems: [],
-        },
-        depth: 0,
-        context: {
-          disableRevalidate: true,
-        },
-      }),
-    ),
+    globals.map((global) => {
+      if (global === 'header' || global === 'footer') {
+        return payload.updateGlobal({
+          slug: global as any,
+          data: {
+            navItems: [],
+          },
+          depth: 0,
+          context: {
+            disableRevalidate: true,
+          },
+        })
+      }
+
+      if (global === 'company-info') {
+        return payload.updateGlobal({
+          slug: global as any,
+          data: {
+            companyName: 'New Company', // Provide default values
+            email: 'contact@example.com',
+            phone: '123-456-7890',
+            description: 'This is a seeded company info global.',
+          },
+          depth: 0,
+          context: {
+            disableRevalidate: true,
+          },
+        })
+      }
+
+      return Promise.resolve()
+    }),
   )
 
   for (const collection of collections) {

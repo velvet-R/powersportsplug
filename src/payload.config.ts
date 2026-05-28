@@ -21,6 +21,7 @@ import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
 import sharp from 'sharp'
+import { CompanyInfo } from './globals/CompanyInfo'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -81,7 +82,7 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
+  globals: [Header, Footer, CompanyInfo],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -1,5 +1,6 @@
 'use client'
 
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import {
   Caravan,
   CreditCard,
@@ -36,6 +37,8 @@ const brands = [
 ]
 
 export default function Footer(): React.JSX.Element {
+  const companyInfo = useCompanyInfo()
+
   return (
     <footer className="w-full bg-surface border-t border-border mt-auto animate-fade-in duration-500">
       {/* ── Top trust bar ── */}
@@ -95,41 +98,41 @@ export default function Footer(): React.JSX.Element {
           <div className="lg:col-span-2 flex flex-col gap-5">
             <Link href="/" className="inline-block group">
               <span className="font-display text-2xl font-black uppercase tracking-tight text-foreground">
-                POWERSPORTS
+                {companyInfo?.companyName || 'PowerSports'}{' '}
                 <span className="text-primary-hover inline-block transition-transform duration-300 group-hover:translate-x-1">
-                  HUB
+                  Plug
                 </span>
               </span>
             </Link>
 
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Your premier destination for quality ATVs and off-road vehicles. Serving customers
-              across all 50 states with no credit check financing and nationwide delivery.
+              {companyInfo.description ||
+                'Your trusted source for quality used ATVs, UTVs, and dirt bikes, delivered nationwide with expert support.'}
             </p>
 
             {/* Contact block */}
             <div className="flex flex-col gap-3">
               <a
-                href="tel:+19726889613"
+                href={`tel:${companyInfo.phone || '+1 (972) 688-9613'}`}
                 className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary-hover transition-colors group"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded border border-border bg-background group-hover:border-primary-hover group-hover:bg-primary-hover/5 transition-all duration-200 shrink-0 group-hover:scale-105">
                   <Phone className="w-3.5 h-3.5 text-primary-hover transition-transform duration-300 group-hover:rotate-12" />
                 </span>
                 <span className="font-mono font-bold text-foreground group-hover:text-primary-hover transition-colors">
-                  +1 (972) 688-9613
+                  {companyInfo.phone || '+1 (972) 688-9613'}
                 </span>
               </a>
 
               <a
-                href="mailto:info@offroadpowersportshub.com"
+                href={`mailto:${companyInfo.email || 'info@offroadpowersportshub.com'}`}
                 className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary-hover transition-colors group"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded border border-border bg-background group-hover:border-primary-hover group-hover:bg-primary-hover/5 transition-all duration-200 shrink-0 group-hover:scale-105">
                   <Mail className="w-3.5 h-3.5 text-primary-hover transition-transform duration-300 group-hover:-translate-y-0.5" />
                 </span>
                 <span className="text-xs truncate transition-transform duration-200 group-hover:translate-x-0.5">
-                  info@offroadpowersportshub.com
+                  {companyInfo.email || 'info@offroadpowersportshub.com'}
                 </span>
               </a>
 
@@ -185,20 +188,18 @@ export default function Footer(): React.JSX.Element {
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-8 lg:px-16 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="font-body text-xs text-subtle text-center sm:text-left">
-              © {new Date().getFullYear()} PowersportsHub. All rights reserved.
+              © {new Date().getFullYear()} {companyInfo.companyName || 'Offroad Powersports Hub'}.
+              All rights reserved.
             </p>
             <div className="flex items-center gap-5">
-              {[
-                { label: 'Privacy Policy', href: '/privacy' },
-                { label: 'Terms of Service', href: '/terms' },
-              ].map((link) => (
+              {[{ label: 'Privacy Policy', href: '/privacy' }].map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className="font-display text-[10px] font-bold tracking-widest uppercase text-subtle hover:text-primary-hover transition-colors duration-200 relative group"
                 >
                   {link.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary-hover transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary-hover transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
             </div>
