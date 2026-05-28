@@ -1,10 +1,16 @@
 'use client'
 
-import { POSTS } from '@/lib/constants'
+import { POSTS } from '@/lib/payload/blog'
+import { Brand, CompanyInfo } from '@/payload-types'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
-export default function BlogSidebar(): React.JSX.Element {
+interface BlogSidebarProps {
+  companyInfo: CompanyInfo | null
+  brands: Brand[]
+}
+
+export default function BlogSidebar({ companyInfo, brands }: BlogSidebarProps): React.JSX.Element {
   const [search, setSearch] = useState('')
 
   const popular = POSTS.slice(0, 4)
@@ -139,7 +145,7 @@ export default function BlogSidebar(): React.JSX.Element {
             door.
           </p>
           <Link
-            href="/finance/apply"
+            href="/financing/apply"
             className="inline-flex items-center justify-center px-5 py-2.5 font-display text-[11px] font-black tracking-widest uppercase rounded-sm text-white transition-all duration-200 active:scale-95 mt-1"
             style={{ background: 'var(--color-primary-hover)' }}
             onMouseEnter={(e) => {
@@ -152,7 +158,7 @@ export default function BlogSidebar(): React.JSX.Element {
             Apply Now — Free
           </Link>
           <a
-            href="tel:+19726889613"
+            href={`tel:${companyInfo?.phone || '+1 (972) 688-9613'}`}
             className="font-display text-[10px] font-bold tracking-widest uppercase text-center transition-colors duration-150"
             style={{ color: 'var(--color-muted-foreground)' }}
             onMouseEnter={(e) => {
@@ -162,7 +168,7 @@ export default function BlogSidebar(): React.JSX.Element {
               ;(e.currentTarget as HTMLElement).style.color = 'var(--color-muted-foreground)'
             }}
           >
-            Or call +1 (972) 688-9613
+            Or call {companyInfo?.phone || '+1 (972) 688-9613'}
           </a>
         </div>
       </div>
@@ -182,43 +188,33 @@ export default function BlogSidebar(): React.JSX.Element {
           </h3>
         </div>
         <div className="flex flex-wrap gap-2">
-          {[
-            'ATV',
-            'Polaris',
-            'Can-Am',
-            'Honda',
-            'Financing',
-            'Trail Riding',
-            'Maintenance',
-            'UTV',
-            'Yamaha',
-            'Dirt Bike',
-            'Side-by-Side',
-            'Kawasaki',
-          ].map((tag) => (
-            <Link
-              key={tag}
-              href={`/blog?tag=${tag.toLowerCase()}`}
-              className="px-2.5 py-1 font-display text-[10px] font-bold tracking-widest uppercase rounded-sm transition-all duration-150"
-              style={{
-                background: 'var(--color-background)',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-muted-foreground)',
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement
-                el.style.borderColor = 'var(--color-primary-hover)'
-                el.style.color = 'var(--color-primary-hover)'
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement
-                el.style.borderColor = 'var(--color-border)'
-                el.style.color = 'var(--color-muted-foreground)'
-              }}
-            >
-              {tag}
-            </Link>
-          ))}
+          {brands
+            .flatMap((brand) => brand.name)
+            .filter((v, i, arr) => arr.indexOf(v) === i)
+            .map((tag) => (
+              <Link
+                key={tag}
+                href={`/blog?tag=${tag.toLowerCase()}`}
+                className="px-2.5 py-1 font-display text-[10px] font-bold tracking-widest uppercase rounded-sm transition-all duration-150"
+                style={{
+                  background: 'var(--color-background)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-muted-foreground)',
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.borderColor = 'var(--color-primary-hover)'
+                  el.style.color = 'var(--color-primary-hover)'
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.borderColor = 'var(--color-border)'
+                  el.style.color = 'var(--color-muted-foreground)'
+                }}
+              >
+                {tag}
+              </Link>
+            ))}
         </div>
       </div>
     </aside>

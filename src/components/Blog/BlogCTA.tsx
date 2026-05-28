@@ -23,14 +23,8 @@ export default function BlogCTA({
       />
 
       {/* Corner Graphic Accent Line */}
-      <div
-        className="absolute top-0 left-0 w-24 h-[2px]"
-        style={{ backgroundColor: accentColor }}
-      />
-      <div
-        className="absolute top-0 left-0 w-[2px] h-24"
-        style={{ backgroundColor: accentColor }}
-      />
+      <div className="absolute top-0 left-0 w-24 h-0.5" style={{ backgroundColor: accentColor }} />
+      <div className="absolute top-0 left-0 w-0.5 h-24" style={{ backgroundColor: accentColor }} />
 
       {/* Radial Highlight Glow */}
       <div
@@ -65,7 +59,7 @@ export default function BlogCTA({
         {/* Tactical Buttons Row */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
           <Link
-            href="/inventory"
+            href="/shop"
             className="group/btn relative overflow-hidden bg-primary-hover text-white font-display text-[11px] font-black tracking-widest uppercase px-6 py-3.5 rounded-sm text-center shadow-lg transition-transform active:scale-[0.98]"
           >
             <span className="relative z-10 flex items-center justify-center gap-1.5">
@@ -75,7 +69,7 @@ export default function BlogCTA({
           </Link>
 
           <Link
-            href="/financing"
+            href="/financing/apply"
             className="group/btn border border-border bg-surface text-white hover:bg-zinc-900 font-display text-[11px] font-black tracking-widest uppercase px-6 py-3.5 rounded-sm text-center transition-all duration-200 active:scale-[0.98]"
             style={{ '--hover-accent': accentColor } as React.CSSProperties}
           >
