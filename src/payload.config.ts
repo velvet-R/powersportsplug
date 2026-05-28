@@ -21,6 +21,7 @@ import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
 import sharp from 'sharp'
+import { Brands } from './collections/Brands'
 import { CompanyInfo } from './globals/CompanyInfo'
 import { plugins } from './plugins'
 
@@ -39,7 +40,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media],
+  collections: [Users, Pages, Categories, Media, Brands],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
