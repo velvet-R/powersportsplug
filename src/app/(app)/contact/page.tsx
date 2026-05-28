@@ -1,15 +1,17 @@
 'use client'
 
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { motion } from 'framer-motion'
 import {
-    CheckCircle,
-    Clock,
-    CornerDownRight,
-    Mail,
-    Phone,
-    Send,
-    ShieldCheck,
-    Truck,
+  CheckCircle,
+  Clock,
+  CornerDownRight,
+  Mail,
+  Phone,
+  Send,
+  ShieldCheck,
+  Truck,
 } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -29,6 +31,8 @@ export default function ContactPage(): React.JSX.Element {
     // Handle secure off-platform agent routing here
     console.log('Routing lead details to agent pipeline:', formData)
   }
+
+  const companyInfo: CompanyInfo | null = useCompanyInfo()
 
   return (
     <main className="w-full bg-background min-h-screen pt-24 pb-20 overflow-hidden relative">
@@ -68,7 +72,7 @@ export default function ContactPage(): React.JSX.Element {
             className="bg-zinc-950 border border-border/80 rounded-xl p-6 relative overflow-hidden group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-zinc-900 border border-border/40 flex items-center justify-center text-primary-hover group-hover:bg-primary-hover group-hover:text-white transition-colors duration-300">
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-border/40 flex items-center justify-center text-primary-hover group-hover:bg-primary-hover group-hover:text-white transition-colors duration-300">
                 <Phone className="w-5 h-5" />
               </div>
               <div>
@@ -76,10 +80,10 @@ export default function ContactPage(): React.JSX.Element {
                   Voice Dispatch
                 </span>
                 <a
-                  href="tel:+18005550199"
+                  href={`tel:${companyInfo?.phone || '18005550199'}`}
                   className="font-display font-black text-lg sm:text-xl text-white tracking-wide hover:text-primary-hover transition-colors"
                 >
-                  1 (800) 555-0199
+                  {companyInfo?.phone || '1 (800) 555-0199'}
                 </a>
               </div>
             </div>
@@ -91,7 +95,7 @@ export default function ContactPage(): React.JSX.Element {
             className="bg-zinc-950 border border-border/80 rounded-xl p-6 relative overflow-hidden group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-zinc-900 border border-border/40 flex items-center justify-center text-primary-hover group-hover:bg-primary-hover group-hover:text-white transition-colors duration-300">
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-border/40 flex shrink-0 items-center justify-center text-primary-hover group-hover:bg-primary-hover group-hover:text-white transition-colors duration-300">
                 <Mail className="w-5 h-5" />
               </div>
               <div>
@@ -99,10 +103,10 @@ export default function ContactPage(): React.JSX.Element {
                   Secure Digital Inbox
                 </span>
                 <a
-                  href="mailto:agents@showroom.com"
+                  href={`mailto:${companyInfo?.email || 'agents@showroom.com'}`}
                   className="font-display font-black text-lg sm:text-xl text-white tracking-wide hover:text-primary-hover transition-colors"
                 >
-                  agents@showroom.com
+                  {companyInfo?.email || 'agents@showroom.com'}
                 </a>
               </div>
             </div>
@@ -114,7 +118,7 @@ export default function ContactPage(): React.JSX.Element {
             className="bg-zinc-950 border border-border/80 rounded-xl p-6 relative overflow-hidden group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-zinc-900 border border-border/40 flex items-center justify-center text-primary-hover group-hover:bg-primary-hover group-hover:text-white transition-colors duration-300">
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-border/40 flex items-center justify-center text-primary-hover group-hover:bg-primary-hover group-hover:text-white transition-colors duration-300">
                 <Truck className="w-5 h-5" />
               </div>
               <div>
@@ -293,39 +297,39 @@ export default function ContactPage(): React.JSX.Element {
               <div className="space-y-4">
                 {/* Voice Line Item */}
                 <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-primary-hover flex-shrink-0" />
+                  <Phone className="w-4 h-4 text-primary-hover shrink-0" />
                   <div className="font-body text-xs">
                     <span className="text-zinc-500 uppercase font-display text-[9px] font-bold tracking-wider block">
                       Voice Dispatch:
                     </span>
                     <a
-                      href="tel:+18005550199"
+                      href={`tel:${companyInfo.phone || '1 607 456 5677'}`}
                       className="text-zinc-200 hover:text-primary-hover font-display font-black transition-colors"
                     >
-                      1 (800) 555-0199
+                      {companyInfo.phone || '1 607 456 5677'}
                     </a>
                   </div>
                 </div>
 
                 {/* Email Inbox Item */}
                 <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-primary-hover flex-shrink-0" />
+                  <Mail className="w-4 h-4 text-primary-hover shrink-0" />
                   <div className="font-body text-xs">
                     <span className="text-zinc-500 uppercase font-display text-[9px] font-bold tracking-wider block">
                       Secure Inbox:
                     </span>
                     <a
-                      href="mailto:agents@showroom.com"
+                      href={`mailto:${companyInfo.email || 'test@mail.com'}`}
                       className="text-zinc-200 hover:text-primary-hover font-display font-black transition-colors"
                     >
-                      agents@showroom.com
+                      {companyInfo.email || 'test@mail.com'}
                     </a>
                   </div>
                 </div>
 
                 {/* Logistics Reach Item */}
                 <div className="flex items-center gap-3">
-                  <Truck className="w-4 h-4 text-primary-hover flex-shrink-0" />
+                  <Truck className="w-4 h-4 text-primary-hover shrink-0" />
                   <div className="font-body text-xs">
                     <span className="text-zinc-500 uppercase font-display text-[9px] font-bold tracking-wider block">
                       Fulfillment Logistics:
@@ -344,7 +348,7 @@ export default function ContactPage(): React.JSX.Element {
             {/* Sub-Card 2: Operational Clock Business Hours */}
             <div className="bg-zinc-950 border border-border/60 rounded-xl p-6 relative overflow-hidden">
               <div className="flex items-start gap-4">
-                <Clock className="w-4 h-4 text-primary-hover mt-1 flex-shrink-0" />
+                <Clock className="w-4 h-4 text-primary-hover mt-1 shrink-0" />
                 <div className="w-full">
                   <h3 className="font-display font-black text-xs text-white uppercase tracking-wider mb-4">
                     Business Hours
@@ -385,7 +389,7 @@ export default function ContactPage(): React.JSX.Element {
               <div className="space-y-4">
                 {/* Financing Point */}
                 <div className="flex items-start gap-3">
-                  <ShieldCheck className="w-4 h-4 text-primary-hover mt-0.5 flex-shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
                     <h4 className="font-display font-black text-xs text-white uppercase tracking-wide">
                       No Credit Check Financing
@@ -399,7 +403,7 @@ export default function ContactPage(): React.JSX.Element {
 
                 {/* Inspection Point */}
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-4 h-4 text-primary-hover mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
                     <h4 className="font-display font-black text-xs text-white uppercase tracking-wide">
                       Every ATV Inspected
@@ -413,7 +417,7 @@ export default function ContactPage(): React.JSX.Element {
 
                 {/* Logistics Point */}
                 <div className="flex items-start gap-3">
-                  <Truck className="w-4 h-4 text-primary-hover mt-0.5 flex-shrink-0" />
+                  <Truck className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
                     <h4 className="font-display font-black text-xs text-white uppercase tracking-wide">
                       All 50 States Delivery
@@ -427,7 +431,7 @@ export default function ContactPage(): React.JSX.Element {
 
                 {/* Payments Point */}
                 <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-primary-hover mt-0.5 flex-shrink-0" />
+                  <Clock className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
                     <h4 className="font-display font-black text-xs text-white uppercase tracking-wide">
                       Flexible Payment Plans
