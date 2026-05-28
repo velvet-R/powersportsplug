@@ -1,14 +1,14 @@
 'use client'
 
-import { EXTENDED_REVIEWS } from '@/lib/constants'
+import { EXTENDED_REVIEWS } from '@/lib/payload/reviews'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-    CheckCircle,
-    ChevronDown,
-    MessageSquare,
-    ShieldCheck,
-    SlidersHorizontal,
-    Star,
+  CheckCircle,
+  ChevronDown,
+  MessageSquare,
+  ShieldCheck,
+  SlidersHorizontal,
+  Star,
 } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
 
