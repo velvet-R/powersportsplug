@@ -1,3 +1,5 @@
+// Add this at the top of app/(app)/layout.tsx
+export const dynamic = 'force-dynamic'
 import type { ReactNode } from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
