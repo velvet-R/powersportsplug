@@ -1,5 +1,6 @@
 import * as migration_20260528_015703_init from './20260528_015703_init';
 import * as migration_20260528_112612_company_info from './20260528_112612_company_info';
+import * as migration_20260528_145447_brands_collection from './20260528_145447_brands_collection';
 
 export const migrations = [
   {
@@ -10,6 +11,11 @@ export const migrations = [
   {
     up: migration_20260528_112612_company_info.up,
     down: migration_20260528_112612_company_info.down,
-    name: '20260528_112612_company_info'
+    name: '20260528_112612_company_info',
+  },
+  {
+    up: migration_20260528_145447_brands_collection.up,
+    down: migration_20260528_145447_brands_collection.down,
+    name: '20260528_145447_brands_collection'
   },
 ];

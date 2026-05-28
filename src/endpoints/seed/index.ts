@@ -615,3 +615,27 @@ async function fetchFileByURL(url: string): Promise<File> {
     size: data.byteLength,
   }
 }
+
+// seed brands collection with some popular brands in the offroad space
+export const seedBrands = async ({
+  payload,
+  req,
+}: {
+  payload: Payload
+  req: PayloadRequest
+}): Promise<void> => {
+  const brands = ['Polaris', 'Can-Am', 'Yamaha', 'Honda', 'Kawasaki', 'Suzuki', 'Arctic Cat', 'KTM']
+
+  for (const brand of brands) {
+    await payload.create({
+      collection: 'brands',
+      data: {
+        name: brand,
+        slug: brand.toLowerCase().replace(/\s+/g, '-'),
+      },
+      req,
+    })
+  }
+
+  payload.logger.info('Seeded brands collection successfully!')
+}
