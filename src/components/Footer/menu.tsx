@@ -4,24 +4,24 @@ import Link from 'next/link'
 import React from 'react'
 
 const shopLinks = [
-  { label: 'All Inventory', href: '/inventory' },
-  { label: 'New ATVs', href: '/inventory/new' },
-  { label: 'Used ATVs', href: '/inventory/used' },
-  { label: 'Performance Upgrades', href: '/parts/upgrades' },
+  { key: 1, label: 'All Inventory', href: '/shop' },
+  { key: 2, label: 'New ATVs', href: '/shop' },
+  { key: 3, label: 'Used ATVs', href: '/shop' },
+  { key: 4, label: 'Performance Upgrades', href: '/shop' },
 ]
 
 const companyLinks = [
-  { label: 'About Us', href: '/about' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Customer Reviews', href: '/reviews' },
-  { label: 'Contact Us', href: '/contact' },
+  { key: 1, label: 'About Us', href: '/about' },
+  { key: 2, label: 'Blog', href: '/blog' },
+  { key: 3, label: 'Customer Reviews', href: '/reviews' },
+  { key: 4, label: 'Contact Us', href: '/contact' },
 ]
 
 const financeLinks = [
-  { label: 'Apply Now', href: '/finance/apply' },
-  { label: 'How It Works', href: '/finance/process' },
-  { label: 'Payment Calculator', href: '/finance/calculator' },
-  { label: 'FAQ', href: '/finance/faq' },
+  { key: 1, label: 'Apply Now', href: '/financing/apply' },
+  { key: 2, label: 'How It Works', href: '/financing' },
+  { key: 3, label: 'Payment Calculator', href: '/financing' },
+  { key: 4, label: 'FAQ', href: '/faq' },
 ]
 
 export default function FooterMenu(): React.JSX.Element {
@@ -37,7 +37,7 @@ export default function FooterMenu(): React.JSX.Element {
         </div>
         <ul className="flex flex-col gap-2.5">
           {shopLinks.map((link) => (
-            <li key={link.href}>
+            <li key={link.key}>
               <Link
                 href={link.href}
                 className="font-display text-[11px] font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary-hover transition-all duration-200 inline-block hover:translate-x-1"
@@ -59,7 +59,7 @@ export default function FooterMenu(): React.JSX.Element {
         </div>
         <ul className="flex flex-col gap-2.5">
           {financeLinks.map((link) => (
-            <li key={link.href}>
+            <li key={link.key}>
               <Link
                 href={link.href}
                 className="font-display text-[11px] font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary-hover transition-all duration-200 inline-block hover:translate-x-1"
@@ -88,7 +88,7 @@ export default function FooterMenu(): React.JSX.Element {
         </div>
         <ul className="flex flex-col gap-2.5">
           {companyLinks.map((link) => (
-            <li key={link.href}>
+            <li key={link.key}>
               <Link
                 href={link.href}
                 className="font-display text-[11px] font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary-hover transition-all duration-200 inline-block hover:translate-x-1"
