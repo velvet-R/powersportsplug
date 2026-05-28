@@ -1,7 +1,6 @@
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Content } from '@/blocks/Content/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
-import { slugField } from 'payload'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { CollectionOverride } from '@payloadcms/plugin-ecommerce/types'
 import {
@@ -18,7 +17,7 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { DefaultDocumentIDType, Where } from 'payload'
+import { DefaultDocumentIDType, slugField, Where } from 'payload'
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
   ...defaultCollection,
@@ -206,6 +205,68 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
       },
       hasMany: true,
       relationTo: 'categories',
+    },
+    {
+      name: 'brand',
+      type: 'relationship',
+      relationTo: 'brands',
+      admin: {
+        position: 'sidebar',
+        sortOptions: 'title',
+      },
+    },
+    {
+      type: 'row',
+      fields: [
+        { name: 'year', type: 'number', required: true },
+        { name: 'engineSize', type: 'text', required: true },
+        {
+          name: 'condition',
+          type: 'select',
+          options: ['New', 'Used', 'Certified'],
+          required: true,
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'stockNumber',
+          type: 'text',
+          label: 'SKU / Stock Number',
+          hooks: {
+            beforeValidate: [
+              ({ data, operation }) => {
+                if (data && operation === 'create' && !data.stockNumber) {
+                  data.stockNumber = `STK-${Math.random()
+                    .toString(36)
+                    .substring(2, 9)
+                    .toUpperCase()}`
+                }
+
+                return data
+              },
+            ],
+          },
+          admin: {
+            description: 'Auto-generated or manually assigned unique identifier.',
+          },
+        },
+        {
+          name: 'lowStockThreshold',
+          type: 'number',
+          defaultValue: 5,
+          admin: { description: 'Alert becomes active when inventory drops below this number.' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        { name: 'downPayment', type: 'number', label: 'Down Payment ($)' },
+        { name: 'estimatedPayment', type: 'number', label: 'Est. Monthly Payment ($)' },
+      ],
     },
     slugField(),
   ],

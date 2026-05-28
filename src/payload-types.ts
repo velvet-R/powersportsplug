@@ -313,6 +313,20 @@ export interface Product {
     description?: string | null;
   };
   categories?: (number | Category)[] | null;
+  brand?: (number | null) | Brand;
+  year: number;
+  engineSize: string;
+  condition: 'New' | 'Used' | 'Certified';
+  /**
+   * Auto-generated or manually assigned unique identifier.
+   */
+  stockNumber?: string | null;
+  /**
+   * Alert becomes active when inventory drops below this number.
+   */
+  lowStockThreshold?: number | null;
+  downPayment?: number | null;
+  estimatedPayment?: number | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -900,6 +914,19 @@ export interface Variant {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brands".
+ */
+export interface Brand {
+  id: number;
+  name: string;
+  slug: string;
+  logo?: (number | null) | Media;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "transactions".
  */
 export interface Transaction {
@@ -1021,19 +1048,6 @@ export interface Address {
     | 'SE'
     | 'CH';
   phone?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "brands".
- */
-export interface Brand {
-  id: number;
-  name: string;
-  slug: string;
-  logo?: (number | null) | Media;
-  description?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1667,6 +1681,14 @@ export interface ProductsSelect<T extends boolean = true> {
         description?: T;
       };
   categories?: T;
+  brand?: T;
+  year?: T;
+  engineSize?: T;
+  condition?: T;
+  stockNumber?: T;
+  lowStockThreshold?: T;
+  downPayment?: T;
+  estimatedPayment?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
