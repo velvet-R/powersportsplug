@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
@@ -20,29 +21,29 @@ import ShopByCategory from '@/components/ShopByCategory'
 import FAQSection from '@/components/ui/FAQSection'
 import WhyChooseUs from '@/components/WhyChooseUs'
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const pages = await payload.find({
-    collection: 'pages',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
+// export async function generateStaticParams() {
+//   const payload = await getPayload({ config: configPromise })
+//   const pages = await payload.find({
+//     collection: 'pages',
+//     draft: false,
+//     limit: 1000,
+//     overrideAccess: false,
+//     pagination: false,
+//     select: {
+//       slug: true,
+//     },
+//   })
 
-  const params = pages.docs
-    ?.filter((doc) => {
-      return doc.slug !== 'home'
-    })
-    .map(({ slug }) => {
-      return { slug }
-    })
+//   const params = pages.docs
+//     ?.filter((doc) => {
+//       return doc.slug !== 'home'
+//     })
+//     .map(({ slug }) => {
+//       return { slug }
+//     })
 
-  return params
-}
+//   return params
+// }
 
 type Args = {
   params: Promise<{
