@@ -2,14 +2,14 @@
 
 import { motion } from 'framer-motion'
 import {
-    ArrowRight,
-    CheckCircle2,
-    ClipboardCheck,
-    Compass,
-    CreditCard,
-    MapPin,
-    Search,
-    ShieldCheck,
+  ArrowRight,
+  CheckCircle2,
+  ClipboardCheck,
+  Compass,
+  CreditCard,
+  MapPin,
+  Search,
+  ShieldCheck,
 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -95,7 +95,7 @@ export default function ShippingSection(): React.JSX.Element {
                     </div>
 
                     {/* Step Icon Frame */}
-                    <div className="w-10 h-10 rounded bg-zinc-900 border border-border flex items-center justify-center text-zinc-400 group-hover:text-primary-hover group-hover:bg-zinc-900 transition-all flex-shrink-0">
+                    <div className="w-10 h-10 rounded bg-zinc-900 border border-border flex items-center justify-center text-zinc-400 group-hover:text-primary-hover group-hover:bg-zinc-900 transition-all shrink-0">
                       <IconComponent className="w-4 h-4" />
                     </div>
 
@@ -142,13 +142,13 @@ export default function ShippingSection(): React.JSX.Element {
 
               <h3 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight uppercase leading-none mb-6">
                 WE DELIVER TO <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-400 to-zinc-600">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-white via-zinc-400 to-zinc-600">
                   ALL 50 STATES
                 </span>
               </h3>
 
               <div className="flex gap-3 items-start bg-black/40 border border-border/40 p-4 rounded-lg backdrop-blur-md mb-8 max-w-md">
-                <MapPin className="w-5 h-5 text-primary-hover mt-0.5 flex-shrink-0 animate-bounce" />
+                <MapPin className="w-5 h-5 text-primary-hover mt-0.5 shrink-0 animate-bounce" />
                 <p className="font-body text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   No matter where you sit on the map—from remote Alaskan trails to deep Texas
                   ranches—we negotiate and coordinate direct door-to-door delivery execution
@@ -160,7 +160,7 @@ export default function ShippingSection(): React.JSX.Element {
             {/* Heavy Call to Action Hook Button */}
             <div>
               <Link
-                href="/inventory"
+                href="/shop"
                 className="w-full h-14 bg-primary-hover hover:bg-white text-white hover:text-black font-display text-xs font-black tracking-[0.2em] uppercase rounded-sm flex items-center justify-center gap-3 shadow-[0_4px_20px_rgba(255,69,0,0.25)] hover:shadow-none transition-all duration-300"
               >
                 <span>Shop Now — We Deliver To You</span>

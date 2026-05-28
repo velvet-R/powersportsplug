@@ -1,17 +1,20 @@
 'use client'
 
+import { STATES } from '@/lib/constants'
+import { Brand, CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { motion } from 'framer-motion'
 import {
-    ArrowRight,
-    CheckCircle2,
-    Clock,
-    FileText,
-    Phone,
-    Search,
-    ShieldCheck,
-    Star,
-    Truck,
-    Zap,
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Phone,
+  Search,
+  ShieldCheck,
+  Star,
+  Truck,
+  Zap,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -19,58 +22,6 @@ import React, { useState } from 'react'
 import heroImg from '../../public/images/herobanner.jpg'
 import MarqueeBanner from './MarqueeBanner'
 
-const STATES = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-]
 const CATEGORIES = ['ATV', 'UTV / Side-by-Side', 'Dirt Bike', 'Go-Kart']
 const BRANDS = ['Polaris', 'Can-Am', 'Honda', 'Yamaha', 'Kawasaki', 'Suzuki']
 const BUDGETS = ['Under $5k', '$5k - $10k', '$10k - $15k', '$15k+']
@@ -111,7 +62,11 @@ const itemVariants = {
   },
 }
 
-export default function HeroSection(): React.JSX.Element {
+interface HeroProps {
+  brands: Brand[]
+}
+
+export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -135,6 +90,9 @@ export default function HeroSection(): React.JSX.Element {
     e.preventDefault()
     console.log(formData)
   }
+
+  // hook onto the global company info context
+  const companyInfo: CompanyInfo | null = useCompanyInfo()
 
   return (
     <>
@@ -222,7 +180,7 @@ export default function HeroSection(): React.JSX.Element {
                 variants={itemVariants}
               >
                 <Link
-                  href="/inventory"
+                  href="/shop"
                   className="inline-flex items-center gap-2 px-6 h-12 bg-primary-hover hover:bg-primary-hover/60 text-white font-display text-xs font-black tracking-widest uppercase rounded shadow-glow-orange transition-all duration-200 active:scale-95"
                 >
                   <Search className="w-4 h-4" />
@@ -230,7 +188,7 @@ export default function HeroSection(): React.JSX.Element {
                 </Link>
 
                 <Link
-                  href="/finance"
+                  href="/financing/apply"
                   className="inline-flex items-center gap-2 px-6 h-12 bg-surface hover:bg-zinc-800 text-white font-display text-xs font-black tracking-widest uppercase rounded border border-border transition-all duration-200 active:scale-95"
                 >
                   <FileText className="w-4 h-4 text-primary-hover" />
@@ -238,7 +196,7 @@ export default function HeroSection(): React.JSX.Element {
                 </Link>
 
                 <a
-                  href="tel:+19726889613"
+                  href={`tel:${companyInfo?.phone || '123-456-7890'}`} // Fallback to a default number if companyInfo is not available
                   className="inline-flex items-center gap-2 px-6 h-12 bg-zinc-900/50 hover:bg-zinc-900 text-muted-foreground hover:text-white font-display text-xs font-bold tracking-widest uppercase rounded border border-border transition-all duration-200"
                 >
                   <Phone className="w-4 h-4 text-zinc-400" />
@@ -509,19 +467,9 @@ export default function HeroSection(): React.JSX.Element {
               },
             }}
           >
-            {[
-              'Polaris',
-              'Can-Am',
-              'Honda',
-              'Yamaha',
-              'Kawasaki',
-              'Suzuki',
-              'KTM',
-              'Arctic Cat',
-              'CF Moto',
-            ].map((brand) => (
+            {brands.map((brand) => (
               <motion.span
-                key={brand}
+                key={brand.id}
                 className="font-bold text-white hover:text-primary-hover uppercase tracking-wider transition-colors duration-200 select-none"
                 // Entrance animation variant rules
                 variants={{
@@ -540,7 +488,7 @@ export default function HeroSection(): React.JSX.Element {
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {brand}
+                {brand.name}
               </motion.span>
             ))}
           </motion.div>

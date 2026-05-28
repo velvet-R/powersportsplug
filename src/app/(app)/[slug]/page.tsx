@@ -1,24 +1,15 @@
 import type { Metadata } from 'next'
 
-import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { homeStaticData } from '@/endpoints/seed/home-static'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 
-import type { Page } from '@/payload-types'
+import HomePage from '@/components/Home'
+import { getBrands } from '@/lib/payload/brands'
+import type { Brand, Page } from '@/payload-types'
 import { notFound } from 'next/navigation'
-
-import BlogSection from '@/components/BlogSection'
-import FeaturedProducts from '@/components/FeaturedProducts'
-import FinancingSection from '@/components/FinancingSection'
-import HeroSection from '@/components/HeroSection'
-import ReviewsSection from '@/components/ReviewsSection'
-import ShippingSection from '@/components/ShippingSection'
-import ShopByCategory from '@/components/ShopByCategory'
-import FAQSection from '@/components/ui/FAQSection'
-import WhyChooseUs from '@/components/WhyChooseUs'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -54,6 +45,9 @@ export default async function Page({ params }: Args) {
   const { slug = 'home' } = await params
   const url = '/' + slug
 
+  // fetch the brands
+  const brands: Brand[] = await getBrands()
+
   let page = await queryPageBySlug({
     slug,
   })
@@ -70,24 +64,12 @@ export default async function Page({ params }: Args) {
   const { hero, layout } = page
 
   return (
-    <article className="pt-16 pb-24">
+    <article className="py-8">
       {/* <RenderHero {...hero} /> */}
-      <RenderBlocks blocks={layout} />
+      {/* <RenderBlocks blocks={layout} /> */}
 
       {/* 2. Render only on the home page right here */}
-      {slug === 'home' && (
-        <>
-          <HeroSection />
-          <ShopByCategory />
-          <WhyChooseUs />
-          <FeaturedProducts />
-          <FinancingSection />
-          <ShippingSection />
-          <ReviewsSection />
-          <BlogSection />
-          <FAQSection />
-        </>
-      )}
+      {slug === 'home' && <HomePage brands={brands} />}
     </article>
   )
 }

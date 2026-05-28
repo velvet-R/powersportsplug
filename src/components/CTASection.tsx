@@ -1,5 +1,7 @@
 'use client'
 
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { ArrowRight, Mail, PhoneCall } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
@@ -13,6 +15,8 @@ export default function CTASection(): React.JSX.Element {
     console.log('Subscribing email:', email)
   }
 
+  const companyInfo = useCompanyInfo() as CompanyInfo | null
+
   return (
     <section className="relative w-full overflow-hidden bg-zinc-950 text-white py-12 sm:py-16 my-auto">
       {/* ── Background Layer with asset protection overlays ── */}
@@ -25,8 +29,8 @@ export default function CTASection(): React.JSX.Element {
           priority
           className="object-cover object-center opacity-25 select-none pointer-events-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/40 to-background z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-transparent to-background/90 z-10" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-background/40 to-background z-10" />
+        <div className="absolute inset-0 bg-linear-to-r from-background/90 via-transparent to-background/90 z-10" />
       </div>
 
       {/* ── Content Container ── */}
@@ -74,21 +78,21 @@ export default function CTASection(): React.JSX.Element {
 
         {/* Divider Node */}
         <div className="mt-6 flex items-center justify-center gap-3 w-full max-w-xs">
-          <div className="h-[1px] bg-border/30 flex-1" />
+          <div className="h-px bg-border/30 flex-1" />
           <span className="font-display text-[9px] font-bold tracking-widest text-zinc-500 uppercase select-none">
             — OR —
           </span>
-          <div className="h-[1px] bg-border/30 flex-1" />
+          <div className="h-px bg-border/30 flex-1" />
         </div>
 
         {/* ── Direct Hotlink Calling Channel ── */}
         <a
-          href="tel:9726889613"
+          href={`tel:${companyInfo?.phone || '9726889613'}`}
           className="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded bg-background border border-border transition-all duration-300 hover:border-primary-hover hover:bg-primary-hover/5 hover:-translate-y-0.5 group"
         >
           <PhoneCall className="w-3.5 h-3.5 text-primary-hover" />
           <span className="font-mono text-sm sm:text-base font-black tracking-tight text-white group-hover:text-primary-hover transition-colors">
-            (972) 688-9613
+            {companyInfo?.phone || '(972) 688-9613'}
           </span>
           <span className="text-zinc-500 font-sans">|</span>
           <span className="font-display text-[10px] font-bold tracking-widest uppercase text-zinc-400">

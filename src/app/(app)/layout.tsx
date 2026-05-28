@@ -1,8 +1,5 @@
-import { AdminBar } from '@/components/AdminBar'
-import CTASection from '@/components/CTASection'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { CompanyInfo } from '@/payload-types'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
@@ -39,11 +36,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       </head>
       <body>
         <Providers companyInfo={companyInfo}>
-          <AdminBar />
-          <LivePreviewListener />
+          {/* <AdminBar />
+          <LivePreviewListener /> */}
           <Header />
           <main>{children}</main>
-          <CTASection />
           <Footer />
         </Providers>
       </body>

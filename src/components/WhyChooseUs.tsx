@@ -1,14 +1,16 @@
 'use client'
 
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { motion } from 'framer-motion'
 import {
-    ArrowRight,
-    FileCheck,
-    PhoneCall,
-    ShieldAlert,
-    ThumbsUp,
-    Truck,
-    Wrench,
+  ArrowRight,
+  FileCheck,
+  PhoneCall,
+  ShieldAlert,
+  ThumbsUp,
+  Truck,
+  Wrench,
 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -49,6 +51,7 @@ const VALUE_PROPS = [
 ]
 
 export default function WhyChooseUs(): React.JSX.Element {
+  const companyInfo: CompanyInfo | null = useCompanyInfo()
   return (
     <section className="w-full bg-zinc-950 py-24 px-4 sm:px-8 lg:px-16 relative overflow-hidden border-t border-border/40">
       {/* Structural Racing Line Grid Overlays */}
@@ -81,7 +84,7 @@ export default function WhyChooseUs(): React.JSX.Element {
 
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
               <Link
-                href="/inventory"
+                href="/shop"
                 className="inline-flex items-center justify-center gap-2 px-6 h-12 bg-primary-hover hover:bg-primary-hover/80 text-white font-display text-xs font-black tracking-widest uppercase rounded shadow-glow-orange transition-all duration-200 active:scale-95 text-center"
               >
                 <span>Find Your Next Machine</span>
@@ -89,7 +92,7 @@ export default function WhyChooseUs(): React.JSX.Element {
               </Link>
 
               <a
-                href="tel:+19726889613"
+                href={`tel:${companyInfo?.phone || '123-456-7890'}`}
                 className="inline-flex items-center justify-center gap-2 px-6 h-12 bg-surface hover:bg-zinc-900 text-white font-display text-xs font-bold tracking-widest uppercase rounded border border-border transition-colors duration-200 text-center"
               >
                 <PhoneCall className="w-3.5 h-3.5 text-primary-hover" />

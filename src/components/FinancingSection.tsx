@@ -2,16 +2,16 @@
 
 import { motion } from 'framer-motion'
 import {
-    ArrowRight,
-    Bike,
-    Calendar,
-    ChevronRight,
-    Clock,
-    DollarSign,
-    FileText,
-    ShieldAlert,
-    Truck,
-    UserCheck,
+  ArrowRight,
+  Bike,
+  Calendar,
+  ChevronRight,
+  Clock,
+  DollarSign,
+  FileText,
+  ShieldAlert,
+  Truck,
+  UserCheck,
 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -81,7 +81,7 @@ export default function FinancingSection(): React.JSX.Element {
   return (
     <section className="w-full bg-background py-24 px-4 sm:px-8 lg:px-16 relative overflow-hidden">
       {/* Structural Accent Grid Background lines */}
-      <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]" />
+      <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-size-[40px_40px]" />
       <div className="absolute -top-40 right-0 w-96 h-96 bg-primary-hover/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="mx-auto max-w-screen-2xl w-full relative z-10">
@@ -95,7 +95,7 @@ export default function FinancingSection(): React.JSX.Element {
           </div>
           <h2 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-none mb-6">
             GET APPROVED{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-400 to-zinc-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-white via-zinc-400 to-zinc-600">
               TODAY
             </span>
           </h2>
@@ -151,7 +151,7 @@ export default function FinancingSection(): React.JSX.Element {
           {/* Central Call-to-Action Link Anchor */}
           <div className="mt-12 flex justify-center">
             <Link
-              href="/apply"
+              href="/financing/apply"
               className="group inline-flex items-center gap-3 h-14 px-8 bg-primary-hover text-white font-display text-xs font-black tracking-[0.2em] uppercase rounded-sm shadow-[0_4px_20px_rgba(255,69,0,0.25)] hover:bg-white hover:text-black hover:shadow-none transition-all duration-300"
             >
               <span>Apply For Financing Now</span>
@@ -171,7 +171,7 @@ export default function FinancingSection(): React.JSX.Element {
                   key={idx}
                   className="bg-surface/20 border border-border/30 rounded-lg p-5 flex gap-4 hover:bg-surface/40 transition-colors"
                 >
-                  <div className="flex-shrink-0 mt-0.5">
+                  <div className="shrink-0 mt-0.5">
                     <IconComponent className="w-5 h-5 text-primary-hover" />
                   </div>
                   <div>
@@ -241,7 +241,7 @@ export default function FinancingSection(): React.JSX.Element {
               <div className="flex items-center justify-between text-xs font-display">
                 <span className="text-muted-foreground">Ready to configure your term?</span>
                 <Link
-                  href="/calculator"
+                  href="/financing/apply"
                   className="text-primary-hover font-bold uppercase tracking-wider hover:underline flex items-center gap-1"
                 >
                   Launch Calculator <ChevronRight className="w-3 h-3" />
