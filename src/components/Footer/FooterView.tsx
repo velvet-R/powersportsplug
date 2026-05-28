@@ -6,17 +6,17 @@ import FooterMenu from './menu'
 import { Brand, CompanyInfo } from '@/payload-types'
 import { useCompanyInfo } from '@/providers/CompanyProvider'
 import {
-    Caravan,
-    CreditCard,
-    Facebook,
-    Instagram,
-    Mail,
-    MapPin,
-    MessageSquare,
-    Phone,
-    ShieldAlert,
-    Twitter,
-    Youtube,
+  Caravan,
+  CreditCard,
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Phone,
+  ShieldAlert,
+  Twitter,
+  Youtube,
 } from 'lucide-react'
 
 type Props = {
@@ -83,7 +83,7 @@ export default function FooterView({ brands }: Props) {
             <Link href="/">
               <span className="text-2xl font-black uppercase">
                 {companyInfo?.companyName || 'PowerSports'}{' '}
-                <span className="text-primary">Plug</span>
+                <span className="text-primary-hover">Plug</span>
               </span>
             </Link>
 
