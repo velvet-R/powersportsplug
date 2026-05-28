@@ -106,33 +106,33 @@ export default function Footer(): React.JSX.Element {
             </Link>
 
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              {companyInfo.description ||
+              {companyInfo?.description ||
                 'Your trusted source for quality used ATVs, UTVs, and dirt bikes, delivered nationwide with expert support.'}
             </p>
 
             {/* Contact block */}
             <div className="flex flex-col gap-3">
               <a
-                href={`tel:${companyInfo.phone || '+1 (972) 688-9613'}`}
+                href={`tel:${companyInfo?.phone || '+1 (972) 688-9613'}`}
                 className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary-hover transition-colors group"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded border border-border bg-background group-hover:border-primary-hover group-hover:bg-primary-hover/5 transition-all duration-200 shrink-0 group-hover:scale-105">
                   <Phone className="w-3.5 h-3.5 text-primary-hover transition-transform duration-300 group-hover:rotate-12" />
                 </span>
                 <span className="font-mono font-bold text-foreground group-hover:text-primary-hover transition-colors">
-                  {companyInfo.phone || '+1 (972) 688-9613'}
+                  {companyInfo?.phone || '+1 (972) 688-9613'}
                 </span>
               </a>
 
               <a
-                href={`mailto:${companyInfo.email || 'info@offroadpowersportshub.com'}`}
+                href={`mailto:${companyInfo?.email || 'info@offroadpowersportshub.com'}`}
                 className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary-hover transition-colors group"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded border border-border bg-background group-hover:border-primary-hover group-hover:bg-primary-hover/5 transition-all duration-200 shrink-0 group-hover:scale-105">
                   <Mail className="w-3.5 h-3.5 text-primary-hover transition-transform duration-300 group-hover:-translate-y-0.5" />
                 </span>
                 <span className="text-xs truncate transition-transform duration-200 group-hover:translate-x-0.5">
-                  {companyInfo.email || 'info@offroadpowersportshub.com'}
+                  {companyInfo?.email || 'info@offroadpowersportshub.com'}
                 </span>
               </a>
 

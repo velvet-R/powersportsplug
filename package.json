@@ -19,7 +19,9 @@
     "stripe-webhooks": "stripe listen --forward-to localhost:3000/api/payments/stripe/webhooks",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "db:migrate:prod": "DATABASE_URL='postgresql://neondb_owner:npg_2djLCkQJ9lxr@ep-sweet-credit-aq0xaqhj-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' npx payload migrate",
+    "db:seed:prod": "DATABASE_URL='postgresql://neondb_owner:npg_2djLCkQJ9lxr@ep-sweet-credit-aq0xaqhj-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' npx payload migrate:status && npx payload seed"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.84.1",
