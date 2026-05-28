@@ -1,6 +1,6 @@
 'use client'
 
-import { TEAM_MEMBERS } from '@/lib/constants'
+import { TEAM_MEMBERS } from '@/lib/payload/team'
 import { motion } from 'framer-motion'
 import React from 'react'
 
@@ -14,7 +14,11 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 80, damping: 15 } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring' as const, stiffness: 80, damping: 15 },
+  },
 }
 
 export default function AboutTeamGrid(): React.JSX.Element {
@@ -55,7 +59,7 @@ export default function AboutTeamGrid(): React.JSX.Element {
               whileHover={{ borderColor: 'rgba(255, 69, 0, 0.4)', y: -4 }}
             >
               {/* IMAGE HOVER FRAME ASSEMBLY */}
-              <div className="relative w-full aspect-[4/3] bg-zinc-900 overflow-hidden border-b border-border">
+              <div className="relative w-full aspect-4/3 bg-zinc-900 overflow-hidden border-b border-border">
                 {/* Fallback pattern graphic behind dynamic photo frames */}
                 <div className="absolute inset-0 opacity-5 grid-bg" />
                 <img
@@ -64,7 +68,7 @@ export default function AboutTeamGrid(): React.JSX.Element {
                   className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 scale-100 group-hover:scale-105 transition-all duration-500 ease-out"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-transparent to-transparent opacity-80" />
               </div>
 
               {/* CARD DETAILS WRAPPER */}

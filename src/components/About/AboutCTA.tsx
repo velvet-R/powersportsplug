@@ -1,15 +1,18 @@
 'use client'
 
 import { CTA_TRUST_BADGES } from '@/lib/constants'
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { ChevronRight, Phone } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 export default function AboutCTA(): React.JSX.Element {
+  const companyInfo: CompanyInfo | null = useCompanyInfo()
   return (
     <section className="w-full py-24 bg-zinc-950 relative overflow-hidden">
       {/* Dynamic Background Radial Shading Effects */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary-hover/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-primary-hover/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
         {/* CORE FUNNEL CARD AREA */}
@@ -29,14 +32,14 @@ export default function AboutCTA(): React.JSX.Element {
           {/* DUAL CTA BUTTON MODULE */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <Link
-              href="/inventory"
+              href="/shop"
               className="group w-full sm:w-auto bg-white text-black font-display text-xs font-black tracking-widest uppercase px-8 h-12 flex items-center justify-center rounded-sm hover:bg-zinc-200 transition-colors duration-150 shadow-xl"
             >
               Browse Inventory
               <ChevronRight className="w-4 h-4 ml-1.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <a
-              href="tel:18005550199"
+              href={`tel:${companyInfo?.phone || '555-123-4567'}`} // Fallback phone number
               className="group w-full sm:w-auto border border-border bg-surface text-white hover:bg-zinc-900 font-display text-xs font-black tracking-widest uppercase px-8 h-12 flex items-center justify-center rounded-sm transition-colors duration-150"
             >
               <Phone className="w-3.5 h-3.5 mr-2 text-primary-hover" />
