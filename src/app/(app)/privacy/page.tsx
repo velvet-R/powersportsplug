@@ -5,7 +5,7 @@ import PrivacyHero from '@/components/Privacy/PrivacyHero'
 import React from 'react'
 
 export const metadata = {
-  title: 'Secure Data Safeguards & Privacy Policy | Offroad Powersports Hub',
+  title: 'Secure Data Safeguards & Privacy Policy | PowerSports Plug',
   description:
     'Review our data security standards. See how your identification and financial income records are secured during our in-house approval process.',
 }

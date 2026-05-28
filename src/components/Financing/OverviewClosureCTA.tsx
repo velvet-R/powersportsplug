@@ -1,11 +1,14 @@
 'use client'
 
+import { CompanyInfo } from '@/payload-types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { motion } from 'framer-motion'
 import { Phone } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 export default function OverviewClosureCTA(): React.JSX.Element {
+  const CompanyInfo: CompanyInfo | null = useCompanyInfo()
   return (
     <section className="w-full py-24 bg-zinc-950 relative overflow-hidden">
       <div className="absolute inset-0 bg-radial from-primary-hover/5 to-transparent pointer-events-none" />
@@ -45,7 +48,7 @@ export default function OverviewClosureCTA(): React.JSX.Element {
             Apply For Financing
           </Link>
           <a
-            href="tel:18005550199"
+            href={`tel:${CompanyInfo?.phone || '+1 (800) 123-4567'}`}
             className="w-full sm:w-auto h-12 px-8 bg-surface border border-border text-white hover:bg-zinc-900 font-display text-xs font-black tracking-widest uppercase rounded-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <Phone className="w-3.5 h-3.5 text-primary-hover" /> Call Now

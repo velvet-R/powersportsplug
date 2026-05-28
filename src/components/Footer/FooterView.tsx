@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, easeOut } from 'framer-motion'
+import { easeOut, motion } from 'framer-motion'
 import Link from 'next/link'
 
 import FooterMenu from './menu'
@@ -9,17 +9,17 @@ import { Brand, CompanyInfo } from '@/payload-types'
 import { useCompanyInfo } from '@/providers/CompanyProvider'
 
 import {
-  Caravan,
-  CreditCard,
-  Facebook,
-  Instagram,
-  Mail,
-  MapPin,
-  MessageSquare,
-  Phone,
-  ShieldAlert,
-  Twitter,
-  Youtube,
+    Caravan,
+    CreditCard,
+    Facebook,
+    Instagram,
+    Mail,
+    MapPin,
+    MessageSquare,
+    Phone,
+    ShieldAlert,
+    Twitter,
+    Youtube,
 } from 'lucide-react'
 
 type Props = {
@@ -162,7 +162,7 @@ export default function FooterView({ brands }: Props) {
               </a>
 
               <a
-                href={`mailto:${companyInfo?.email || 'info@offroadpowersportshub.com'}`}
+                href={`mailto:${companyInfo?.email || 'info@powersportsplughub.com'}`}
                 className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary-hover transition-colors group"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded border border-border bg-background group-hover:border-primary-hover group-hover:bg-primary-hover/5 transition-all duration-200 shrink-0 group-hover:scale-105">
@@ -170,7 +170,7 @@ export default function FooterView({ brands }: Props) {
                 </span>
 
                 <span className="text-xs truncate transition-transform duration-200 group-hover:translate-x-0.5">
-                  {companyInfo?.email || 'info@offroadpowersportshub.com'}
+                  {companyInfo?.email || 'info@powersportsplughub.com'}
                 </span>
               </a>
 
@@ -251,8 +251,8 @@ export default function FooterView({ brands }: Props) {
           >
             <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
               <p className="font-body text-xs text-subtle">
-                © {new Date().getFullYear()} {companyInfo?.companyName || 'Offroad Powersports Hub'}
-                . All rights reserved.
+                © {new Date().getFullYear()} {companyInfo?.companyName || 'PowerSports Plug'}. All
+                rights reserved.
               </p>
 
               <div className="hidden sm:block w-1 h-1 rounded-full bg-border" />

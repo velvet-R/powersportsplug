@@ -1,5 +1,6 @@
 'use client'
 
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import HeaderCTA from './HeaderCTA'
@@ -27,6 +28,8 @@ export default function Header(): React.JSX.Element {
     }
   }, [isMobileMenuOpen])
 
+  const { companyName } = useCompanyInfo() || { companyName: 'PowerSports' }
+
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${
@@ -42,9 +45,9 @@ export default function Header(): React.JSX.Element {
             href="/"
             className="shrink-0 font-display text-2xl sm:text-3xl font-black uppercase tracking-tight select-none transition-transform duration-300 transform hover:scale-[1.02] active:scale-[0.98] group"
           >
-            <span className="text-primary-hover">POWERSPORTS</span>
+            <span className="text-primary-hover uppercase">{companyName}</span>
             <span className="text-foreground not-italic inline-block transition-transform duration-300 group-hover:translate-x-0.5">
-              HUB
+              PLUG
             </span>
           </Link>
 

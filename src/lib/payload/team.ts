@@ -3,7 +3,7 @@ export const TEAM_MEMBERS = [
     name: 'Mike Torres',
     role: 'Founder & Head of Sales',
     image: '/images/team/mike.jpg', // Replace with your image assets
-    desc: 'Mike has been riding ATVs and dirt bikes since he was a teenager and spent over 20 years in the powersports world before opening Offroad Powersports Hub. He personally oversees every major purchase decision, ensuring the inventory always reflects what real riders actually want.',
+    desc: 'Mike has been riding ATVs and dirt bikes since he was a teenager and spent over 20 years in the powersports world before opening PowerSports Plug. He personally oversees every major purchase decision, ensuring the inventory always reflects what real riders actually want.',
   },
   {
     name: 'Sarah Jenkins',

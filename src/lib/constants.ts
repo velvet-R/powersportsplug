@@ -470,7 +470,7 @@ export const MILESTONES_TIMELINE = [
     alignment: 'left',
     period: 'Day One',
     title: 'The Doors Open',
-    text: 'Offroad Powersports Hub starts with a small inventory of a dozen machines, a two-person team, and a bold vision: to be the dealership they always wished existed. The first customer rolls in on opening day. Word starts to spread.',
+    text: 'PowerSports Plug starts with a small inventory of a dozen machines, a two-person team, and a bold vision: to be the dealership they always wished existed. The first customer rolls in on opening day. Word starts to spread.',
   },
   {
     alignment: 'right',

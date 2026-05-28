@@ -4,7 +4,11 @@ import { APPLICANT_CHECKLIST, TRANS_ADVANTAGES } from '@/lib/constants'
 import { ChevronRight, FileText, Phone, ShieldCheck } from 'lucide-react'
 import React, { useState } from 'react'
 
-export default function FinancingApplicationForm(): React.JSX.Element {
+interface Props {
+  phone: string
+}
+
+export default function FinancingApplicationForm({ phone }: Props): React.JSX.Element {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -193,7 +197,7 @@ export default function FinancingApplicationForm(): React.JSX.Element {
             {/* Action Submit Trigger Button */}
             <button
               type="submit"
-              className="w-full h-12 bg-primary-hover hover:bg-primary text-white font-display text-xs font-black tracking-widest uppercase rounded-sm flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.99] transition-all cursor-pointer"
+              className="w-full h-12 bg-primary-hover hover:bg-primary text-white hover:text-secondary font-display text-xs font-black tracking-widest uppercase rounded-sm flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.99] transition-all cursor-pointer"
             >
               Transmit Application Securely <ChevronRight className="w-4 h-4" />
             </button>
@@ -238,7 +242,7 @@ export default function FinancingApplicationForm(): React.JSX.Element {
             </div>
 
             {/* Card 3: Direct Phone Application Capture */}
-            <div className="bg-gradient-to-br from-zinc-950 to-surface border border-primary-hover/30 p-6 rounded-sm relative overflow-hidden text-center md:text-left">
+            <div className="bg-linear-to-br from-zinc-950 to-surface border border-primary-hover/30 p-6 rounded-sm relative overflow-hidden text-center md:text-left">
               <div className="absolute inset-0 bg-radial from-primary-hover/5 to-transparent pointer-events-none" />
               <h4 className="font-display font-black text-sm uppercase text-white tracking-wide mb-2">
                 Apply by Phone
@@ -247,7 +251,7 @@ export default function FinancingApplicationForm(): React.JSX.Element {
                 Prefer to apply by phone? Our financing specialists are ready to help you right now.
               </p>
               <a
-                href="tel:18005550199"
+                href={`tel:${phone}`}
                 className="group h-11 border border-border bg-surface text-white hover:bg-zinc-900 font-display text-[10px] font-black tracking-widest uppercase px-6 inline-flex items-center justify-center rounded-sm transition-all cursor-pointer w-full md:w-auto"
               >
                 <Phone className="w-3.5 h-3.5 mr-2 text-primary-hover" /> Call Now

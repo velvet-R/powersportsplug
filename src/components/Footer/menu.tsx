@@ -71,7 +71,7 @@ export default function FooterMenu(): React.JSX.Element {
         </ul>
         {/* CTA inside finance col */}
         <Link
-          href="/finance/apply"
+          href="/financing/apply"
           className="mt-2 inline-flex items-center justify-center px-4 py-2.5 bg-primary-hover hover:bg-primary-hover/70 text-white font-display text-[11px] font-bold tracking-widest uppercase rounded transition-all duration-300 hover:scale-[1.03] active:scale-95 text-center shadow-md hover:shadow-primary-hover/20"
         >
           Apply Now — Free

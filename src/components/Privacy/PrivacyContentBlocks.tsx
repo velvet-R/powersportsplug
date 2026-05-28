@@ -1,17 +1,19 @@
 'use client'
 
 import { PRIVACY_REGISTRY } from '@/lib/constants'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { Mail, ShieldAlert } from 'lucide-react'
 import React from 'react'
 
 export default function PrivacyContentBlocks(): React.JSX.Element {
+  const { email } = useCompanyInfo()
   return (
     <section className="w-full py-16 bg-background">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
         {/* Core Introductory Statement */}
         <div className="bg-zinc-950 border border-border p-5 rounded font-body text-xs sm:text-sm text-zinc-400 leading-relaxed space-y-3">
           <p>
-            At <strong>Offroad Powersports Hub</strong>, protecting the integrity of your personal
+            At <strong>PowerSports </strong>, protecting the integrity of your personal
             identification data is a core component of our business operations. Because our unique
             in-house lending structure replaces traditional corporate bank inquiries with real-world
             document evaluations, we gather comprehensive financial details to set affordable terms
@@ -71,10 +73,10 @@ export default function PrivacyContentBlocks(): React.JSX.Element {
           <div className="inline-flex items-center gap-2 font-mono text-xs bg-background border border-border/80 px-3 py-1.5 rounded text-zinc-300">
             <Mail className="w-3.5 h-3.5 text-primary-hover" /> Data Support Node:{' '}
             <a
-              href="mailto:info@offroadpowersportshub.com"
+              href={`mailto:${email || 'info@powersportsplughub.com'}`}
               className="text-primary-hover hover:underline ml-0.5"
             >
-              info@offroadpowersportshub.com
+              {email || 'info@powersportsplughub.com'}
             </a>
           </div>
         </div>

@@ -115,7 +115,7 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
           >
             <Image
               src={heroImg}
-              alt="Offroad ATV Background"
+              alt="powersportsplug ATV Background"
               fill
               priority
               className="object-cover object-center opacity-40"

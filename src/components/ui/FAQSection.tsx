@@ -56,14 +56,14 @@ export default function FAQSection(): React.JSX.Element {
                 </a>
 
                 <a
-                  href={`mailto:${companyInfo?.email || 'info@offroadpowersportshub.com'}`}
+                  href={`mailto:${companyInfo?.email || 'info@powersportsplughub.com'}`}
                   className="flex items-center gap-3 p-3 bg-background border border-border rounded hover:border-primary-hover group transition-all duration-300 overflow-hidden"
                 >
                   <span className="flex h-8 w-8 items-center justify-center bg-surface rounded border border-border text-primary-hover group-hover:bg-primary-hover/5 transition-colors shrink-0">
                     <Mail className="w-3.5 h-3.5 transition-transform duration-300 group-hover:-translate-y-0.5" />
                   </span>
                   <span className="text-xs font-medium text-muted-foreground group-hover:text-primary-hover transition-colors truncate">
-                    {companyInfo?.email || 'info@offroadpowersportshub.com'}
+                    {companyInfo?.email || 'info@powersportsplughub.com'}
                   </span>
                 </a>
               </div>

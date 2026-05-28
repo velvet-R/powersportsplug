@@ -38,8 +38,7 @@ export default function AboutTeamGrid(): React.JSX.Element {
           </h2>
           <p className="font-body text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl">
             We're not a faceless corporate chain. We're your neighbors, your fellow riders, and your
-            biggest advocates on and off the trail. Our team is what makes Offroad Powersports Hub
-            special.
+            biggest advocates on and off the trail. Our team is what makes PowerSports Plug special.
           </p>
         </div>
 

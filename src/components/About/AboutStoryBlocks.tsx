@@ -35,15 +35,15 @@ export default function AboutStoryBlocks(): React.JSX.Element {
           >
             <p>
               Every great business starts with a problem that needs solving. For the founders of
-              Offroad Powersports Hub, that problem was simple: they couldn't find a dealership that
+              PowerSports Plug, that problem was simple: they couldn't find a dealership that
               actually understood off-road riders. Most places treated ATVs and side-by-sides like
               any other product — something to move off a lot as fast as possible.
             </p>
             <p>
               So they decided to build something different. Starting with a small lot, a handful of
-              machines, and a whole lot of passion, Offroad Powersports Hub opened its doors with
-              one promise: to serve riders the way they deserved to be served — with honesty,
-              expertise, and genuine enthusiasm for the sport.
+              machines, and a whole lot of passion, PowerSports Plug opened its doors with one
+              promise: to serve riders the way they deserved to be served — with honesty, expertise,
+              and genuine enthusiasm for the sport.
             </p>
 
             {/* Direct Highlighting Blockquote Component */}
@@ -79,8 +79,8 @@ export default function AboutStoryBlocks(): React.JSX.Element {
             <p>
               Word spread fast. Repeat customers brought their friends. Friends brought their
               families. First-time buyers came in nervous and left excited, armed with the knowledge
-              and confidence to tackle their first trail. It didn't take long before Offroad
-              Powersports Hub outgrew its original location.
+              and confidence to tackle their first trail. It didn't take long before Power Sports
+              Plug outgrew its original location.
             </p>
             <p>
               Today, we carry premium ATVs, UTVs, dirt bikes, side-by-sides, and powersports
@@ -95,8 +95,8 @@ export default function AboutStoryBlocks(): React.JSX.Element {
               experienced riders find the gear and support to keep pushing further.
             </p>
             <p className="font-display font-bold text-xs uppercase tracking-wider text-white pt-4">
-              This is Offroad Powersports Hub. This is who we are, where we came from, and what we
-              stand for every single day.
+              This is PowerSports Plug. This is who we are, where we came from, and what we stand
+              for every single day.
             </p>
           </motion.div>
         </div>
