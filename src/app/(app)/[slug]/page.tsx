@@ -135,7 +135,6 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { homeStaticData } from '@/endpoints/seed/home-static'
 import { generateMeta } from '@/utilities/generateMeta'
 import configPromise from '@payload-config'
-import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 
 import type { Page } from '@/payload-types'
@@ -211,30 +210,18 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 
 const queryPageBySlug = async ({ slug }: { slug: string }) => {
   try {
-    const { isEnabled: draft } = await draftMode()
     const payload = await getPayload({ config: configPromise })
-
     const result = await payload.find({
       collection: 'pages',
-      draft,
-      limit: 1,
-      overrideAccess: draft,
-      pagination: false,
-      where: {
-        and: [
-          {
-            slug: {
-              equals: slug,
-            },
-          },
-          ...(draft ? [] : [{ _status: { equals: 'published' } }]),
-        ],
-      },
+      // ... rest of your code
     })
+
+    // ADD THIS LINE:
+    console.log(`DB Query for slug '${slug}' returned ${result.docs?.length} documents`)
 
     return result.docs?.[0] || null
   } catch (error) {
-    console.warn(`Database unreachable for slug: ${slug}, returning null during build.`)
+    console.error('DB Error:', error)
     return null
   }
 }
