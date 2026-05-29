@@ -325,8 +325,8 @@ export interface Product {
    * Alert becomes active when inventory drops below this number.
    */
   lowStockThreshold?: number | null;
-  downPayment?: number | null;
-  estimatedPayment?: number | null;
+  downPayment: number;
+  estimatedPayment: number;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */

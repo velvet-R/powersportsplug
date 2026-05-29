@@ -1,5 +1,4 @@
-import type { Category, Product, VariantOption, VariantType } from '@/payload-types'
-import type { Media } from '@/payload-types'
+import type { Category, Media, Product, VariantType } from '@/payload-types'
 import { RequiredDataFromCollectionSlug } from 'payload'
 
 type ProductArgs = {
@@ -61,6 +60,14 @@ export const productHatData: (args: ProductArgs) => RequiredDataFromCollectionSl
     gallery: [{ image: galleryImage }],
     title: 'Hat',
     slug: 'hat',
+
+    // ADD THESE REQUIRED FIELDS:
+    year: 2026,
+    engineSize: 'N/A', // Hats don't have engines, but the schema requires the field
+    condition: 'New',
+    downPayment: 0,
+    estimatedPayment: 0,
+
     priceInUSDEnabled: true,
     priceInUSD: 2500,
     relatedProducts: relatedProducts,

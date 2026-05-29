@@ -1169,9 +1169,13 @@ export const productTshirtData: (
     gallery: galleryImages,
     title: 'Tshirt',
     slug: 'tshirt',
-    priceInUSDEnabled: true,
-    priceInUSD: 4999,
-    relatedProducts: relatedProducts,
+
+    // ADD THESE REQUIRED FIELDS:
+    year: 2026,
+    engineSize: 'N/A',
+    condition: 'New',
+    downPayment: 0,
+    estimatedPayment: 0,
   }
 }
 

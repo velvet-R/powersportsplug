@@ -231,25 +231,25 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     {
       type: 'row',
       fields: [
+        // Replace your existing hook with this version
         {
           name: 'stockNumber',
           type: 'text',
           label: 'SKU / Stock Number',
           hooks: {
             beforeValidate: [
-              ({ data, operation }) => {
-                if (data && operation === 'create' && !data.stockNumber) {
-                  data.stockNumber = `STK-${Math.random()
-                    .toString(36)
-                    .substring(2, 9)
-                    .toUpperCase()}`
+              ({ value, operation }) => {
+                // If it's a new product and no value exists, generate it
+                if (operation === 'create' && !value) {
+                  return `STK-${Math.random().toString(36).substring(2, 9).toUpperCase()}`
                 }
-
-                return data
+                // Otherwise, return the existing value
+                return value
               },
             ],
           },
           admin: {
+            readOnly: true,
             description: 'Auto-generated or manually assigned unique identifier.',
           },
         },
@@ -264,8 +264,13 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     {
       type: 'row',
       fields: [
-        { name: 'downPayment', type: 'number', label: 'Down Payment ($)' },
-        { name: 'estimatedPayment', type: 'number', label: 'Est. Monthly Payment ($)' },
+        { name: 'downPayment', type: 'number', label: 'Down Payment ($)', required: true },
+        {
+          name: 'estimatedPayment',
+          type: 'number',
+          label: 'Est. Monthly Payment ($)',
+          required: true,
+        },
       ],
     },
     slugField(),
