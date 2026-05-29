@@ -1,3 +1,4 @@
+import { GetProductArgs } from '@/types'
 import { mapPayloadToProduct } from '@/utilities/product-utils'
 import configPromise from '@payload-config'
 import { draftMode } from 'next/headers'
@@ -24,25 +25,139 @@ export const getFeaturedProducts = async () => {
   return docs.map(mapPayloadToProduct)
 }
 
-export const getPaginatedProducts = async (page: number, limit: number) => {
-  const payload = await getPayload({ config: configPromise })
+export const getPaginatedProducts = async ({
+  page = 1,
+  limit = 10,
+  search,
+  brand,
+  category,
+  condition,
+  priceRange,
+  sortBy,
+}: GetProductArgs) => {
+  const payload = await getPayload({
+    config: configPromise,
+  })
 
-  const products = await payload.find({
+  const andConditions: any[] = [
+    {
+      _status: {
+        equals: 'published',
+      },
+    },
+  ]
+
+  if (search) {
+    andConditions.push({
+      or: [
+        {
+          title: {
+            contains: search,
+          },
+        },
+        {
+          stockNumber: {
+            contains: search,
+          },
+        },
+      ],
+    })
+  }
+
+  if (brand && brand !== 'All') {
+    // 1. Fetch the brand ID first by name
+    const brandDoc = await payload.find({
+      collection: 'brands',
+      where: {
+        name: { equals: brand }, // Or 'title' if that's your field name
+      },
+      limit: 1,
+    })
+
+    if (brandDoc.docs.length > 0) {
+      andConditions.push({
+        brand: {
+          equals: brandDoc.docs[0].id, // Pass the ID, not the name
+        },
+      })
+    } else {
+      // If brand not found, return empty set (optional)
+      andConditions.push({ id: { equals: '0' } })
+    }
+  }
+
+  if (category && category !== 'All') {
+    // 1. Fetch the category ID first by name
+    const categoryDoc = await payload.find({
+      collection: 'categories',
+      where: {
+        title: { equals: category }, // Or 'title' if that's your field name
+      },
+      limit: 1,
+    })
+
+    if (categoryDoc.docs.length > 0) {
+      andConditions.push({
+        categories: {
+          equals: categoryDoc.docs[0].id, // Pass the ID, not the name
+        },
+      })
+    } else {
+      // If category not found, return empty set (optional)
+      andConditions.push({ id: { equals: '0' } })
+    }
+  }
+
+  if (condition && condition !== 'All') {
+    andConditions.push({
+      condition: {
+        equals: condition,
+      },
+    })
+  }
+
+  if (priceRange) {
+    const [min, max] = priceRange.split('-').map(Number)
+
+    andConditions.push({
+      priceInUSD: {
+        greater_than_equal: min,
+        less_than_equal: max,
+      },
+    })
+  }
+
+  let sort = '-createdAt'
+
+  switch (sortBy) {
+    case 'price-low':
+      sort = 'priceInUSD'
+      break
+
+    case 'price-high':
+      sort = '-priceInUSD'
+      break
+
+    case 'year-new':
+      sort = '-year'
+      break
+  }
+
+  const result = await payload.find({
     collection: 'products',
     depth: 2,
     pagination: true,
     page,
     limit,
+    sort,
     where: {
-      _status: {
-        equals: 'published',
-      },
+      and: andConditions,
     },
   })
 
   return {
-    ...products,
-    docs: products.docs.map(mapPayloadToProduct),
+    ...result,
+    docs: result.docs.map(mapPayloadToProduct),
   }
 }
 
@@ -80,4 +195,68 @@ export async function generateStaticParams() {
   return products.docs.map((prod) => ({
     slug: prod.slug,
   }))
+}
+
+export const getFilterMetadata = async () => {
+  const payload = await getPayload({
+    config: configPromise,
+  })
+
+  const result = await payload.find({
+    collection: 'products',
+    depth: 1,
+    pagination: false,
+    limit: 1000,
+    where: {
+      _status: {
+        equals: 'published',
+      },
+    },
+  })
+
+  const brands = Array.from(
+    new Set(
+      result.docs
+        .map((p) => {
+          // If 'brand' is a relationship, Payload returns an object or ID.
+          // Access the field that holds the name (e.g., 'name', 'title', or the value itself)
+          const brandData = p.brand
+          if (typeof brandData === 'object' && brandData !== null) {
+            // Replace 'name' with the actual field name in your Brand collection
+            return (brandData as any).name || (brandData as any).title || String(brandData)
+          }
+          return brandData
+        })
+        .filter(Boolean),
+    ),
+  ) as string[]
+
+  // Normalize Categories
+  const categories = Array.from(
+    new Set(
+      result.docs.flatMap((p) => {
+        // 1. Get the field (it might be an array or a single object)
+        const cats = Array.isArray(p.categories) ? p.categories : [p.categories]
+
+        // 2. Map through them and extract the name/title
+        return cats.filter(Boolean).map((cat: any) => {
+          if (typeof cat === 'object') {
+            return cat.name || cat.title || 'Unknown'
+          }
+          return String(cat)
+        })
+      }),
+    ),
+  ).filter(Boolean) as string[]
+
+  const prices = result.docs
+    .map((p: any) => p.price)
+    .filter((price: any) => typeof price === 'number')
+
+  return {
+    brands,
+    categories,
+    minPrice: prices.length ? Math.min(...prices) : 0,
+    maxPrice: prices.length ? Math.max(...prices) : 85000,
+  }
 }

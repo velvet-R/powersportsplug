@@ -1,30 +1,47 @@
-// src/app/(app)/shop/page.tsx
+import InventoryView from '@/components/product/InventoryView'
 
-import InventoryView from '@/components/product/InventoryView'; // ◄ Imports your client UI       // ◄ Imports your dummy data
-import { getFeaturedProducts } from '@/lib/payload/products'
+import { getFilterMetadata, getPaginatedProducts } from '@/lib/payload/products'
 
-export default async function ShopPage() {
-  // 1. Set your products to use the mock stack directly
-  const products = await getFeaturedProducts()
+interface Props {
+  searchParams: Promise<{
+    page?: string
+    search?: string
+    brand?: string
+    category?: string
+    condition?: string
+    priceRange?: string
+    sortBy?: string
+  }>
+}
 
-  // 2. Automatically extract unique brands from the data array
-  // This reads 'Polaris', 'Can-Am', etc., from your mock items dynamically
-  const uniqueBrands = Array.from(new Set(products.map((product) => product.brand))).filter(
-    (brand): brand is string => typeof brand === 'string',
-  )
+export default async function ShopPage({ searchParams }: Props) {
+  const params = await searchParams
 
-  // 3. Automatically extract unique categories
-  // This reads 'ATV', 'UTV', 'Dirt Bike' from your mock items dynamically
-  const uniqueCategories = Array.from(new Set(products.map((product) => product.category))).filter(
-    (cat): cat is string => typeof cat === 'string',
-  )
+  const page = Number(params.page || 1)
 
-  // 4. Wire everything together by passing them as props
+  const [productsData, filterData] = await Promise.all([
+    getPaginatedProducts({
+      page,
+      limit: 10,
+      search: params.search,
+      brand: params.brand,
+      category: params.category,
+      condition: params.condition,
+      priceRange: params.priceRange,
+      sortBy: params.sortBy,
+    }),
+
+    getFilterMetadata(),
+  ])
+
   return (
     <InventoryView
-      initialProducts={products}
-      availableBrands={uniqueBrands}
-      availableCategories={uniqueCategories}
+      products={productsData.docs}
+      totalPages={productsData.totalPages}
+      currentPage={productsData.page ?? 1}
+      totalDocs={productsData.totalDocs}
+      availableBrands={filterData.brands}
+      availableCategories={filterData.categories}
     />
   )
 }

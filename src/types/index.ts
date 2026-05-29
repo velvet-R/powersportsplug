@@ -87,3 +87,14 @@ export interface FrontendProduct {
   isLowStock: boolean
   stockNumber: string
 }
+
+export interface GetProductArgs {
+  page?: number
+  limit?: number
+  search?: string
+  brand?: string
+  category?: string
+  condition?: string
+  priceRange?: string
+  sortBy?: string
+}
