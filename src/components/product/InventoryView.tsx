@@ -1,13 +1,13 @@
 'use client'
 
 import ProductCard from '@/components/product/ProductCard'
-import { FilterState, Product } from '@/types'
+import { FilterState, FrontendProduct } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Grid, List, RotateCcw, Search, Sliders, SlidersHorizontal, X } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 
 interface InventoryViewProps {
-  initialProducts?: Product[]
+  initialProducts?: FrontendProduct[]
   availableBrands?: string[]
   availableCategories?: string[]
 }
