@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 
 import HomePage from '@/components/Home'
 import { getBrands } from '@/lib/payload/brands'
+import { getFeaturedProducts } from '@/lib/payload/products'
 import type { Brand, Page } from '@/payload-types'
 import { notFound } from 'next/navigation'
 
@@ -44,9 +45,11 @@ type Args = {
 export default async function Page({ params }: Args) {
   const { slug = 'home' } = await params
   const url = '/' + slug
-
   // fetch the brands
   const brands: Brand[] = await getBrands()
+
+  // fetch featured products
+  const featuredProducts = await getFeaturedProducts()
 
   let page = await queryPageBySlug({
     slug,
@@ -69,7 +72,7 @@ export default async function Page({ params }: Args) {
       {/* <RenderBlocks blocks={layout} /> */}
 
       {/* 2. Render only on the home page right here */}
-      {slug === 'home' && <HomePage brands={brands} />}
+      {slug === 'home' && <HomePage brands={brands} featuredProducts={featuredProducts} />}
     </article>
   )
 }

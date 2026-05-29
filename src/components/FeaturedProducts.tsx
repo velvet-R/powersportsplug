@@ -1,6 +1,6 @@
 'use client'
 
-import { Product } from '@/types'
+import { FrontendProduct, Product } from '@/types'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
@@ -54,7 +54,11 @@ const FEATURED_MOCK_DATA: Product[] = [
   },
 ]
 
-export default function FeaturedProducts(): React.JSX.Element {
+interface Props {
+  Products?: FrontendProduct[]
+}
+
+export default function FeaturedProducts({ Products }: Props): React.JSX.Element {
   return (
     <section className="w-full bg-background py-24 px-4 sm:px-8 lg:px-16 relative overflow-hidden border-t border-border/40">
       <div className="absolute top-0 left-2/3 w-px h-full bg-border/5 pointer-events-none" />
@@ -78,7 +82,7 @@ export default function FeaturedProducts(): React.JSX.Element {
           </div>
 
           <Link
-            href="/inventory"
+            href="/shop"
             className="group inline-flex items-center gap-2 text-xs font-display font-black tracking-widest uppercase text-muted-foreground hover:text-white transition-colors duration-200"
           >
             <span>View Full 500+ Unit Inventory</span>
@@ -97,9 +101,9 @@ export default function FeaturedProducts(): React.JSX.Element {
             visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
           }}
         >
-          {FEATURED_MOCK_DATA.map((product) => (
+          {Products?.map((product) => (
             <motion.div
-              key={product.id}
+              key={String(product.id)}
               variants={{
                 hidden: { opacity: 0, y: 25 },
                 visible: {
@@ -109,7 +113,7 @@ export default function FeaturedProducts(): React.JSX.Element {
                 },
               }}
             >
-              <ProductCard product={product} />
+              <ProductCard product={{ ...product, id: String(product.id) }} />
             </motion.div>
           ))}
         </motion.div>

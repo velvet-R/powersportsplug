@@ -1,18 +1,24 @@
 'use client'
 
-import { Product } from '@/types'
+import { useCompanyInfo } from '@/providers/CompanyProvider'
+import { FrontendProduct } from '@/types'
 import { motion } from 'framer-motion'
-import { ChevronRight, CreditCard, Phone, ShieldAlert } from 'lucide-react'
-import Link from 'next/link'
+import { Phone, ShieldAlert, ShoppingCart } from 'lucide-react'
 import React from 'react'
 
 interface FinancingActionCardProps {
-  product: Product
+  product: FrontendProduct
 }
 
 export default function FinancingActionCard({
   product,
 }: FinancingActionCardProps): React.JSX.Element {
+  const { phone } = useCompanyInfo() || { phone: '18005550199' }
+
+  // ... inside the component
+  const handleAddToCart = () => {
+    console.log('Adding to cart:', product.title)
+  }
   return (
     <div className="sticky top-28 bg-zinc-950 border-2 border-border p-6 rounded-lg shadow-2xl space-y-6 overflow-hidden">
       <div className="absolute top-0 left-0 h-1 w-full bg-primary-hover" />
@@ -86,19 +92,20 @@ export default function FinancingActionCard({
 
       {/* Action CTA Integration Triggers */}
       <div className="space-y-3 pt-2">
-        <Link
-          href={`/financing/apply?item=${product.id}`}
-          className="group w-full h-12 bg-primary-hover hover:brightness-110 font-display text-xs font-black tracking-widest uppercase text-white flex items-center justify-center gap-1.5 rounded-sm transition-all shadow-xl active:scale-[0.99]"
+        <motion.button
+          whileTap={{ scale: 0.98 }}
+          onClick={handleAddToCart}
+          className="group w-full h-12 bg-primary-hover hover:brightness-110 font-display text-xs font-black tracking-widest uppercase flex items-center justify-center gap-2 rounded-sm transition-all shadow-xl"
         >
-          <CreditCard className="w-4 h-4" /> Start In-House Approval{' '}
-          <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
+          <span>Add To Cart</span>
+          <ShoppingCart className="w-4 h-4" />
+        </motion.button>
 
         <a
-          href="tel:18005550199"
+          href={`tel:${phone}`}
           className="w-full h-11 border border-border bg-surface hover:bg-zinc-900 font-display text-[10px] font-black tracking-widest uppercase text-zinc-200 flex items-center justify-center gap-2 rounded-sm transition-all"
         >
-          <Phone className="w-3.5 h-3.5 text-primary-hover" /> Secure Via Phone Lock
+          <Phone className="w-3.5 h-3.5 text-primary-hover" /> Inquiries & Support
         </a>
       </div>
 

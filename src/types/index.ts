@@ -67,3 +67,23 @@ export interface PrivacySection {
   intro?: string
   bullets?: string[]
 }
+
+// import { SerializedEditorState } from '@payloadcms/richtext-lexical';
+
+export interface FrontendProduct {
+  id: number | string
+  slug: string
+  title: string
+  brand: string | undefined
+  category: string
+  price: number
+  downPayment: number
+  estimatedPayment: number
+  condition: 'New' | 'Used' | 'Certified'
+  year: number
+  engineSize: string
+  description?: any | null // Use 'any' if the type is not exported
+  images: string[]
+  isLowStock: boolean
+  stockNumber: string
+}

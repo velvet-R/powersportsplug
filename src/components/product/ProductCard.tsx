@@ -1,14 +1,22 @@
 'use client'
 
-import { Product } from '@/types'
+import { FrontendProduct } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Flame, Gauge, ShieldCheck, Zap } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Flame,
+  Gauge,
+  ShieldCheck,
+  ShoppingCart,
+  Zap,
+} from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
 interface ProductCardProps {
-  product: Product
+  product: FrontendProduct
 }
 
 export default function ProductCard({ product }: ProductCardProps): React.JSX.Element {
@@ -59,7 +67,7 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
         </div>
 
         {/* Carousel Image Container */}
-        <Link href={`/inventory/${product.id}`} className="absolute inset-0 block">
+        <Link href={`/products/${product.slug}`} className="absolute inset-0 block">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentImgIdx}
@@ -134,7 +142,7 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             </span>
           </div>
 
-          <Link href={`/inventory/${product.id}`} className="block group/title">
+          <Link href={`/products/${product.slug}`} className="block group/title">
             <h3 className="font-display font-black text-xl text-white uppercase tracking-tight line-clamp-1 group-hover/title:text-primary-hover transition-colors mb-3">
               {product.title}
             </h3>
@@ -186,12 +194,25 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             </div>
           </div>
 
-          <Link
-            href={`/inventory/${product.id}`}
-            className="w-full h-10 bg-primary-hover hover:bg-primary-hover border border-border hover:border-primary-hover text-white font-display text-[11px] font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 transition-all duration-200"
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="w-full h-10 bg-primary-hover hover:bg-primary-hover/60 text-white font-display text-[11px] font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 transition-colors duration-300"
+            onClick={(e) => {
+              e.preventDefault()
+              // Add your cart logic here
+              console.log('Added to cart:', product.title)
+            }}
+            title={`Add ${product.title} to cart`}
           >
-            Lock Pricing
-          </Link>
+            <span>Add to Cart</span>
+            <motion.div
+              initial={{ x: 0 }}
+              whileHover={{ x: 5 }}
+              transition={{ type: 'spring', stiffness: 400 }}
+            >
+              <ShoppingCart className="w-3.5 h-3.5" />
+            </motion.div>
+          </motion.button>
         </div>
       </div>
     </motion.div>
