@@ -15,6 +15,9 @@ export const getFeaturedProducts = async () => {
       _status: {
         equals: 'published',
       },
+      isFeatured: {
+        equals: true,
+      },
     },
   })
 
