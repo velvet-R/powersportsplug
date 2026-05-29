@@ -327,6 +327,7 @@ export interface Product {
   lowStockThreshold?: number | null;
   downPayment: number;
   estimatedPayment: number;
+  isFeatured?: boolean | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1689,6 +1690,7 @@ export interface ProductsSelect<T extends boolean = true> {
   lowStockThreshold?: T;
   downPayment?: T;
   estimatedPayment?: T;
+  isFeatured?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
