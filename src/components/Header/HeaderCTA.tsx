@@ -1,6 +1,7 @@
 'use client'
 import { CompanyInfo } from '@/payload-types'
 import { useCompanyInfo } from '@/providers/CompanyProvider'
+import { useCartStore } from '@/store/cart-store'; // Import your store
 import { PhoneCall, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -17,32 +18,38 @@ export default function HeaderCTA({
   variant = 'desktop',
 }: HeaderCTAProps): React.JSX.Element {
   const companyInfo = useCompanyInfo() as CompanyInfo | null
+
+  // Connect to Zustand
+  const { items, toggleDrawer } = useCartStore()
+  const totalItems = items.reduce((acc, item) => acc + item.quantity, 0)
+
+  // Shared Cart Button Logic
+  const CartButton = (
+    <button
+      onClick={toggleDrawer} // Open drawer instead of linking
+      className="relative p-2.5 text-muted-foreground hover:text-primary-hover bg-surface border border-border hover:border-primary-hover rounded transition-all duration-300 group"
+      aria-label="Open shopping cart"
+    >
+      <ShoppingCart className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+
+      {/* Dynamic Quantity Badge */}
+      {totalItems > 0 ? (
+        <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-primary-hover text-white text-[9px] font-black rounded-full shadow-sm transition-transform duration-300 group-hover:scale-110">
+          {totalItems}
+        </span>
+      ) : (
+        <span className="absolute top-1 right-1 w-2 h-2 bg-primary-hover rounded-full animate-pulse" />
+      )}
+    </button>
+  )
+
   if (variant === 'mobile-bar') {
-    return (
-      <div className="flex items-center gap-2">
-        <Link
-          href="/cart"
-          className="relative p-2.5 text-muted-foreground hover:text-primary-hover bg-surface border border-border hover:border-primary-hover rounded transition-all duration-300 group"
-          aria-label="Shopping cart"
-        >
-          <ShoppingCart className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full transition-transform duration-300 group-hover:scale-150 animate-pulse" />
-        </Link>
-      </div>
-    )
+    return <div className="flex items-center gap-2">{CartButton}</div>
   }
 
   return (
     <div className="flex items-center gap-4">
-      {/* Shopping Cart Button */}
-      <Link
-        href="/cart"
-        className="relative p-2.5 text-muted-foreground hover:text-primary-hover bg-surface border border-border hover:border-primary-hover rounded transition-all duration-300 group"
-        aria-label="Shopping cart"
-      >
-        <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3" />
-        <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full transition-all duration-300 group-hover:scale-125 group-hover:bg-primary-hover" />
-      </Link>
+      {CartButton}
 
       {/* Call Now Action */}
       <a

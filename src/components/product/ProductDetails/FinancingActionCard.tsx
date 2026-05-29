@@ -1,9 +1,10 @@
 'use client'
 
+import AddToCartButton from '@/components/Cart/AddToCardButton'
 import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { FrontendProduct } from '@/types'
 import { motion } from 'framer-motion'
-import { Phone, ShieldAlert, ShoppingCart } from 'lucide-react'
+import { Phone, ShieldAlert } from 'lucide-react'
 import React from 'react'
 
 interface FinancingActionCardProps {
@@ -15,10 +16,6 @@ export default function FinancingActionCard({
 }: FinancingActionCardProps): React.JSX.Element {
   const { phone } = useCompanyInfo() || { phone: '18005550199' }
 
-  // ... inside the component
-  const handleAddToCart = () => {
-    console.log('Adding to cart:', product.title)
-  }
   return (
     <div className="sticky top-28 bg-zinc-950 border-2 border-border p-6 rounded-lg shadow-2xl space-y-6 overflow-hidden">
       <div className="absolute top-0 left-0 h-1 w-full bg-primary-hover" />
@@ -92,15 +89,7 @@ export default function FinancingActionCard({
 
       {/* Action CTA Integration Triggers */}
       <div className="space-y-3 pt-2">
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          onClick={handleAddToCart}
-          className="group w-full h-12 bg-primary-hover hover:brightness-110 font-display text-xs font-black tracking-widest uppercase flex items-center justify-center gap-2 rounded-sm transition-all shadow-xl"
-        >
-          <span>Add To Cart</span>
-          <ShoppingCart className="w-4 h-4" />
-        </motion.button>
-
+        <AddToCartButton productId={Number(product.id)} />
         <a
           href={`tel:${phone}`}
           className="w-full h-11 border border-border bg-surface hover:bg-zinc-900 font-display text-[10px] font-black tracking-widest uppercase text-zinc-200 flex items-center justify-center gap-2 rounded-sm transition-all"

@@ -2,18 +2,11 @@
 
 import { FrontendProduct } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
-import {
-  ChevronLeft,
-  ChevronRight,
-  Flame,
-  Gauge,
-  ShieldCheck,
-  ShoppingCart,
-  Zap,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, Flame, Gauge, ShieldCheck, Zap } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import AddToCartButton from '../Cart/AddToCardButton'
 
 interface ProductCardProps {
   product: FrontendProduct
@@ -194,25 +187,7 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             </div>
           </div>
 
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className="w-full h-10 bg-primary-hover hover:bg-primary-hover/60 text-white font-display text-[11px] font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 transition-colors duration-300"
-            onClick={(e) => {
-              e.preventDefault()
-              // Add your cart logic here
-              console.log('Added to cart:', product.title)
-            }}
-            title={`Add ${product.title} to cart`}
-          >
-            <span>Add to Cart</span>
-            <motion.div
-              initial={{ x: 0 }}
-              whileHover={{ x: 5 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-            >
-              <ShoppingCart className="w-3.5 h-3.5" />
-            </motion.div>
-          </motion.button>
+          <AddToCartButton productId={Number(product.id)} />
         </div>
       </div>
     </motion.div>

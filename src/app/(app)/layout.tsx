@@ -1,3 +1,4 @@
+import CartDrawer from '@/components/Cart/CardDrawer'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { CompanyInfo } from '@/payload-types'
@@ -39,6 +40,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           {/* <AdminBar />
           <LivePreviewListener /> */}
           <Header />
+          <CartDrawer />
           <main>{children}</main>
           <Footer />
         </Providers>

@@ -260,3 +260,19 @@ export const getFilterMetadata = async () => {
     maxPrice: prices.length ? Math.max(...prices) : 85000,
   }
 }
+
+export const getProductsByIds = async (ids: number[]) => {
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'products',
+    depth: 1,
+    pagination: false,
+    where: {
+      id: { in: ids }, // Payload handles 'in' query perfectly
+    },
+  })
+
+  // Map the raw results to your FrontendProduct format
+  return result.docs.map(mapPayloadToProduct)
+}
