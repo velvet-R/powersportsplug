@@ -273,6 +273,15 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
         },
       ],
     },
+    {
+      name: 'isFeatured',
+      type: 'checkbox',
+      label: 'Featured Product',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+      },
+    },
     slugField(),
   ],
 })
