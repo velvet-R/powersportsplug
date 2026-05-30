@@ -20,8 +20,10 @@ import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import sharp from 'sharp'
 import { Brands } from './collections/Brands'
+import { SalesInquiries } from './collections/SalesInquiries'
 import { CompanyInfo } from './globals/CompanyInfo'
 import { plugins } from './plugins'
 
@@ -40,7 +42,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Brands],
+  collections: [Users, Pages, Categories, Media, Brands, SalesInquiries],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
@@ -81,7 +83,21 @@ export default buildConfig({
       ]
     },
   }),
-  //email: nodemailerAdapter(),
+  email: nodemailerAdapter({
+    defaultFromAddress: 'sales@powersportsplug.com',
+    defaultFromName: 'PowerSports Sales',
+
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    },
+  }),
+
   endpoints: [],
   globals: [Header, Footer, CompanyInfo],
   plugins,

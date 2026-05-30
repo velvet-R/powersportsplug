@@ -1,18 +1,24 @@
 'use client'
-import { getProductsByIdsAction } from '@/lib/payload/actions'
+import { getProductsByIdsAction } from '@/lib/actions/products'
 import { useCartStore } from '@/store/cart-store'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FileText, Minus, Package, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import SalesInquiryForm from '../forms/Quotes/SalesInquiries'
 
 export default function CartDrawer() {
-  const { items, removeItem, increaseQty, decreaseQty, isDrawerOpen, toggleDrawer } = useCartStore()
+  const { items, removeItem, increaseQty, decreaseQty, isDrawerOpen, toggleDrawer, view, setView } =
+    useCartStore()
 
   const [products, setProducts] = useState<any[]>([])
   const pathname = usePathname()
+
+  // Reset to 'cart' view whenever the drawer is closed
+  useEffect(() => {
+    if (!isDrawerOpen) setView('cart')
+  }, [isDrawerOpen])
 
   useEffect(() => {
     // If the path changes and the drawer is open, close it
@@ -63,20 +69,25 @@ export default function CartDrawer() {
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
-          className="w-full max-w-md bg-zinc-950 border-l border-border h-full p-6 relative z-10"
+          className="w-full max-w-lg bg-zinc-950 border-l border-border h-full p-6 relative z-10"
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-white font-black uppercase tracking-widest">Your Fleet</h2>
+            <h2 className="text-primary-hover font-black uppercase tracking-widest">Your Fleet</h2>
             <button onClick={toggleDrawer}>
               <X className="w-5 h-5 text-zinc-500 hover:text-white" />
             </button>
           </div>
 
-          {items.length === 0 ? (
-            /* EMPTY STATE */
+          {view === 'quote' ? (
+            <div className="overflow-y-auto h-full pb-10">
+              <SalesInquiryForm />
+            </div>
+          ) : items.length === 0 ? (
             <div className="h-[60vh] flex flex-col items-center justify-center text-center space-y-4">
               <ShoppingBag className="w-12 h-12 text-zinc-800" />
+
               <p className="text-zinc-500 font-medium">Your cart is empty.</p>
+
               <button
                 onClick={toggleDrawer}
                 className="text-primary-hover font-bold text-sm underline"
@@ -85,16 +96,15 @@ export default function CartDrawer() {
               </button>
             </div>
           ) : (
-            /* PRODUCT LIST */
             <>
               <div className="space-y-6 overflow-y-auto max-h-[60vh] pr-2">
                 {items.map((item) => {
                   const product = getProduct(item.productId)
+
                   if (!product) return null
 
                   return (
                     <div key={item.productId} className="flex gap-4 border-b border-zinc-800 pb-4">
-                      {/* Image - Increased size slightly for better visibility */}
                       <div className="w-20 h-20 bg-zinc-900 rounded-lg overflow-hidden relative border border-zinc-800">
                         {product.images?.[0] ? (
                           <Image
@@ -110,25 +120,25 @@ export default function CartDrawer() {
                         )}
                       </div>
 
-                      {/* Details - Using a vertical stack for cleaner alignment */}
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
                           <h3 className="text-white text-sm font-bold leading-tight mb-2">
                             {product.title}
                           </h3>
 
-                          {/* Financial Grid - Cleaned up to be more legible */}
                           <div className="grid grid-cols-3 gap-2 bg-zinc-900/50 p-2 rounded text-[9px]">
                             <div className="flex flex-col">
                               <span className="text-zinc-500 uppercase tracking-wider">Cash</span>
                               <span className="text-white">${product.price.toLocaleString()}</span>
                             </div>
+
                             <div className="flex flex-col border-l border-zinc-800 pl-2">
                               <span className="text-zinc-500 uppercase tracking-wider">Down</span>
                               <span className="text-white">
                                 ${product.downPayment.toLocaleString()}
                               </span>
                             </div>
+
                             <div className="flex flex-col border-l border-zinc-800 pl-2">
                               <span className="text-zinc-500 uppercase tracking-wider">Mo.</span>
                               <span className="text-primary-hover">
@@ -138,7 +148,6 @@ export default function CartDrawer() {
                           </div>
                         </div>
 
-                        {/* Action Row */}
                         <div className="flex items-center gap-4 mt-3">
                           <div className="flex items-center bg-zinc-900 rounded-full border border-zinc-800">
                             <button
@@ -147,9 +156,11 @@ export default function CartDrawer() {
                             >
                               <Minus className="w-3 h-3" />
                             </button>
+
                             <span className="text-white text-xs px-2 font-bold">
                               {item.quantity}
                             </span>
+
                             <button
                               onClick={() => increaseQty(item.productId)}
                               className="p-1.5 hover:text-white transition-colors"
@@ -157,6 +168,7 @@ export default function CartDrawer() {
                               <Plus className="w-3 h-3" />
                             </button>
                           </div>
+
                           <button
                             onClick={() => removeItem(item.productId)}
                             className="text-zinc-500 hover:text-red-500 transition-colors ml-auto"
@@ -173,15 +185,17 @@ export default function CartDrawer() {
               <div className="absolute bottom-6 left-6 right-6 pt-6 border-t border-zinc-800">
                 <div className="flex justify-between text-white font-black mb-4">
                   <span>Estimated Total:</span>
+
                   <span className="text-primary-hover text-lg">${subtotal.toLocaleString()}</span>
                 </div>
-                <Link
-                  href="/quote-request"
+
+                <button
+                  onClick={() => setView('quote')}
                   className="w-full flex items-center justify-center gap-2 py-3 bg-primary-hover rounded text-white shadow-md shadow-primary-hover/10 hover:bg-primary hover:text-secondary hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 font-bold uppercase tracking-widest text-[11px]"
                 >
                   <FileText className="w-4 h-4" />
-                  Request Quote for All
-                </Link>
+                  Request Quote For All
+                </button>
               </div>
             </>
           )}

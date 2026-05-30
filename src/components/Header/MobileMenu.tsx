@@ -78,7 +78,7 @@ export default function MobileMenu({
         <div className="flex items-center justify-between border-b border-border pb-4 mb-5">
           <span className="font-display text-lg font-black uppercase tracking-tight text-foreground">
             {companyInfo?.companyName || 'Company'}
-            <span className="text-primary-hover">HUB</span>
+            <span className="text-primary-hover">Plug</span>
           </span>
           <button
             onClick={onClose}

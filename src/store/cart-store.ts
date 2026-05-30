@@ -16,12 +16,17 @@ interface CartState {
   clearCart: () => void
   increaseQty: (productId: number) => void
   decreaseQty: (productId: number) => void
+  view: 'cart' | 'quote'
+  setView: (view: 'cart' | 'quote') => void
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set) => ({
       items: [],
+
+      view: 'cart', // Default view
+      setView: (view) => set({ view }),
 
       isDrawerOpen: false,
 
@@ -74,6 +79,7 @@ export const useCartStore = create<CartState>()(
           ),
         })),
     }),
+
     {
       name: 'cart-storage', // Key for localStorage
     },

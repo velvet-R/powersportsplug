@@ -77,6 +77,7 @@ export interface Config {
     categories: Category;
     media: Media;
     brands: Brand;
+    'sales-inquiries': SalesInquiry;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -111,6 +112,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     brands: BrandsSelect<false> | BrandsSelect<true>;
+    'sales-inquiries': SalesInquiriesSelect<false> | SalesInquiriesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -1054,6 +1056,33 @@ export interface Address {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sales-inquiries".
+ */
+export interface SalesInquiry {
+  id: number;
+  customerName: string;
+  email: string;
+  phone: string;
+  location: string;
+  message?: string | null;
+  products?:
+    | {
+        productTitle?: string | null;
+        productId?: number | null;
+        quantity?: number | null;
+        price?: number | null;
+        downPayment?: number | null;
+        estimatedPayment?: number | null;
+        image?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  status?: ('new' | 'contacted' | 'closed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1112,6 +1141,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'brands';
         value: number | Brand;
+      } | null)
+    | ({
+        relationTo: 'sales-inquiries';
+        value: number | SalesInquiry;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1433,6 +1466,32 @@ export interface BrandsSelect<T extends boolean = true> {
   slug?: T;
   logo?: T;
   description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sales-inquiries_select".
+ */
+export interface SalesInquiriesSelect<T extends boolean = true> {
+  customerName?: T;
+  email?: T;
+  phone?: T;
+  location?: T;
+  message?: T;
+  products?:
+    | T
+    | {
+        productTitle?: T;
+        productId?: T;
+        quantity?: T;
+        price?: T;
+        downPayment?: T;
+        estimatedPayment?: T;
+        image?: T;
+        id?: T;
+      };
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }

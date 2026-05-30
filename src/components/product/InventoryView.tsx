@@ -106,7 +106,7 @@ export default function InventoryView({
             <div className="flex items-center gap-4">
               {/* VIEW MODE */}
 
-              <div className="flex items-center gap-1 bg-surface/20 p-1 border border-border rounded">
+              <div className="sm:hidden md:flex items-center gap-1 bg-surface/20 p-1 border border-border rounded">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-xs transition-colors ${
