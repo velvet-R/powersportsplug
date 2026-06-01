@@ -40,7 +40,7 @@ export const mapPayloadToProduct = (payloadProduct: Product): FrontendProduct =>
         ? (payloadProduct.categories[0] as { title: string }).title
         : 'Uncategorized'
       : 'Uncategorized',
-    price: payloadProduct.priceInUSDEnabled ? payloadProduct.priceInUSD || 0 : 0,
+    price: payloadProduct.priceInUSDEnabled ? (payloadProduct.priceInUSD || 0) / 100 : 0,
     downPayment: payloadProduct.downPayment || 0,
     estimatedPayment: payloadProduct.estimatedPayment || 0,
     condition: payloadProduct.condition || 'Used',

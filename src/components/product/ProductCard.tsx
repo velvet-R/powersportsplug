@@ -163,7 +163,7 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
                 Cash Price
               </span>
               <span className="font-display font-black text-base sm:text-lg text-white">
-                ${product.price.toLocaleString()}
+                ${product.price.toLocaleString('en-US')}
               </span>
             </div>
 
