@@ -1,64 +1,27 @@
 'use client'
 
-import { FrontendProduct, Product } from '@/types'
+import { getProductsCountAction } from '@/lib/actions/products'
+import { FrontendProduct } from '@/types'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ProductCard from './product/ProductCard'
-
-const FEATURED_MOCK_DATA: Product[] = [
-  {
-    id: '2026-polaris-sportsman-850',
-    title: 'Sportsman 850 Ultimate',
-    brand: 'Polaris',
-    price: 11499,
-    downPayment: 1500,
-    estimatedPayment: 185,
-    condition: 'New',
-    year: 2026,
-    engineSize: '850cc EFI',
-    stockNumber: 'P26-8841',
-    isLowStock: true,
-    images: [
-      '/images/inventory/herobanner.jpg',
-      '/images/inventory/image1.png',
-      '/images/inventory/herobanner.jpg',
-    ],
-  },
-  {
-    id: '2025-canam-outlander-1000r',
-    title: 'Outlander MAX XT-P 1000R',
-    brand: 'Can-Am',
-    price: 14899,
-    downPayment: 2000,
-    estimatedPayment: 230,
-    condition: 'New',
-    year: 2025,
-    engineSize: '91hp Rotax V-Twin',
-    stockNumber: 'C25-9012',
-    images: ['/images/inventory/herobanner.jpg', '/images/inventory/herobanner.jpg'],
-  },
-  {
-    id: '2023-honda-foreman-4x4',
-    title: 'FourTrax Foreman Rubicon 4x4',
-    brand: 'Honda',
-    price: 8999,
-    downPayment: 999,
-    estimatedPayment: 140,
-    condition: 'Used',
-    year: 2023,
-    engineSize: '518cc Liquid-Cooled',
-    stockNumber: 'H23-4109',
-    images: ['/images/inventory/herobanner.jpg', '/images/inventory/herobanner.jpg'],
-  },
-]
 
 interface Props {
   Products?: FrontendProduct[]
 }
 
 export default function FeaturedProducts({ Products }: Props): React.JSX.Element {
+  const [productsCount, setProductsCount] = useState<number>(0)
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const count = await getProductsCountAction()
+      setProductsCount(count)
+    }
+    fetchCount()
+  }, [])
   return (
     <section className="w-full bg-background py-24 px-4 sm:px-8 lg:px-16 relative overflow-hidden border-t border-border/40">
       <div className="absolute top-0 left-2/3 w-px h-full bg-border/5 pointer-events-none" />
@@ -85,7 +48,7 @@ export default function FeaturedProducts({ Products }: Props): React.JSX.Element
             href="/shop"
             className="group inline-flex items-center gap-2 text-xs font-display font-black tracking-widest uppercase text-muted-foreground hover:text-white transition-colors duration-200"
           >
-            <span>View Full 500+ Unit Inventory</span>
+            <span>View Full {productsCount}+ Unit Inventory</span>
             <ArrowRight className="w-4 h-4 text-primary-hover transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>

@@ -276,3 +276,20 @@ export const getProductsByIds = async (ids: number[]) => {
   // Map the raw results to your FrontendProduct format
   return result.docs.map(mapPayloadToProduct)
 }
+
+// get the total product count in the db
+export const getTotalProductCount = async (): Promise<number> => {
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'products',
+    pagination: false,
+    where: {
+      _status: {
+        equals: 'published',
+      },
+    },
+  })
+
+  return result.totalDocs || 0
+}
