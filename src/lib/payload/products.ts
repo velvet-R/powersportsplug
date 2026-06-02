@@ -11,7 +11,7 @@ export const getFeaturedProducts = async () => {
     collection: 'products',
     depth: 2,
     pagination: false,
-    limit: 6,
+    limit: 12,
     where: {
       _status: {
         equals: 'published',
