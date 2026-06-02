@@ -28,14 +28,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html
-      className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
+      className={`${GeistSans.variable} ${GeistMono.variable} dark`}
       lang="en"
       suppressHydrationWarning
     >
       <head>
         <InitTheme />
       </head>
-      <body>
+      <body className="bg-background text-foreground min-h-screen" suppressHydrationWarning>
         <Providers companyInfo={companyInfo}>
           {/* <AdminBar />
           <LivePreviewListener /> */}

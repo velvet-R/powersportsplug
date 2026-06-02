@@ -17,7 +17,7 @@ const ThemeContext = createContext(initialContext)
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setThemeState] = useState<Theme | undefined>(
-    canUseDOM ? (document.documentElement.getAttribute('data-theme') as Theme) : undefined,
+    canUseDOM ? (document.documentElement.getAttribute('data-theme') as Theme) : 'dark',
   )
 
   const setTheme = useCallback((themeToSet: Theme | null) => {
@@ -34,6 +34,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   useEffect(() => {
+    // 2. Only re-run the logic if the theme isn't already 'dark'
+    // This prevents the provider from overwriting the InitTheme script
+    const currentDOMTheme = document.documentElement.getAttribute('data-theme')
+
+    if (currentDOMTheme === 'dark') {
+      setThemeState('dark')
+      return
+    }
     let themeToSet: Theme = defaultTheme
     const preference = window.localStorage.getItem(themeLocalStorageKey)
 

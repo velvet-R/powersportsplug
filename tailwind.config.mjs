@@ -11,7 +11,7 @@ export default {
   ],
 
   // Preserves Payload's explicit administrative layout selection styling
-  darkMode: ['selector', '[data-theme="dark"]'],
+  darkMode: 'class',
 
   // Fully merged administrative layout components and custom asset safelist rules
   safelist: [
