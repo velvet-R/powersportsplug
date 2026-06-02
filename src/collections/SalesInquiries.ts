@@ -42,7 +42,7 @@ export const SalesInquiries: CollectionConfig = {
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
           await req.payload.sendEmail({
-            to: 'tysonmilton@gmail.com',
+            to: 'tysonsmilton@gmail.com',
             subject: `New Sales Inquiry from ${doc.customerName}`,
             html: `
               <h1>New Sales Inquiry</h1>
