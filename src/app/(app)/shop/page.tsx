@@ -14,6 +14,12 @@ interface Props {
   }>
 }
 
+export const metadata = {
+  title: 'Shop | Powersports Plug',
+  description:
+    'Explore our extensive inventory of powersports vehicles and accessories. Find the perfect ride or gear for your next adventure.',
+}
+
 export default async function ShopPage({ searchParams }: Props) {
   const params = await searchParams
 

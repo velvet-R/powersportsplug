@@ -3,6 +3,12 @@ import CartListContainer from '@/components/Cart/CartListContainer'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
+export const metadata = {
+  title: 'Cart | Powersports Plug',
+  description:
+    'Review your selected powersports vehicles and accessories in your shopping cart. Make adjustments, apply discounts, and proceed to checkout with confidence.',
+}
+
 export default async function CartPage() {
   const payload = await getPayload({ config: configPromise })
   const { docs: products } = await payload.find({ collection: 'products', limit: 100 })

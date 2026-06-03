@@ -34,6 +34,29 @@ const CARD_GRADIENTS: Record<string, string> = {
   Safety: 'linear-gradient(135deg, #1a0000 0%, #0f0f12 100%)',
 }
 
+// dynamic meta data generation for blog posts
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const post = POSTS.find((p) => p.slug === params.slug)
+
+  if (!post) {
+    return {
+      title: 'Blog Post Not Found | Powersports Plug',
+      description: 'The blog post you are looking for does not exist.',
+    }
+  }
+
+  return {
+    title: `${post.title} | Powersports Plug`,
+    description: post.excerpt,
+    openGraph: {
+      title: `${post.title} | Powersports Plug`,
+      description: post.excerpt,
+      url: `/blog/${post.slug}`,
+      type: 'article',
+    },
+  }
+}
+
 export default function BlogPostDetailsPage({ params, brands }: Props): React.JSX.Element {
   const { slug } = params // Now you can safely access the slug
   const post = POSTS.find((p) => p.slug === slug)

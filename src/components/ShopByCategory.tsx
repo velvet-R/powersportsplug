@@ -11,30 +11,30 @@ const CATEGORIES = [
   {
     title: 'ATV / Four-Wheeler',
     tagline: 'Trail Dominators',
-    units: '210+ Units',
-    href: '/inventory?category=atv',
+    units: '70+ Units',
+    href: '/shop?category=ATV&page=1',
     image: '/images/categories/atv.jpg',
   },
   {
     title: 'UTV / Side-by-Side',
     tagline: 'Work-Ready & Sport Performance',
-    units: '145+ Units',
-    href: '/inventory?category=utv',
+    units: '10+ Units',
+    href: '/shop?category=UTV&page=1',
     image: '/images/categories/utv.jpg',
   },
   {
     title: 'Dirt Bikes',
     tagline: 'Pure Motocross Power',
-    units: '90+ Units',
-    href: '/inventory?category=dirt-bike',
+    units: '10+ Units',
+    href: '/shop?category=Dirt+Bike&page=1',
     image: '/images/categories/dirt-bike.jpg',
   },
   {
-    title: 'Youth Machines',
+    title: 'Boat',
     tagline: 'Built For The Next Gen',
-    units: '45+ Units',
-    href: '/inventory?category=youth',
-    image: '/images/categories/youth.jpg',
+    units: '10+ Units',
+    href: '/shop?category=Boat&page=1',
+    image: '/images/categories/boat.jpg',
   },
 ]
 
@@ -82,7 +82,7 @@ export default function ShopByCategory(): React.JSX.Element {
           {CATEGORIES.map((cat, i) => (
             <Link href={cat.href} key={i} className="block group">
               <motion.div
-                className="relative h-[420px] rounded-xl overflow-hidden border border-border/80 bg-zinc-900 flex flex-col justify-end p-6"
+                className="relative h-105 rounded-xl overflow-hidden border border-border/80 bg-zinc-900 flex flex-col justify-end p-6"
                 variants={{
                   hidden: { opacity: 0, y: 30 },
                   visible: {

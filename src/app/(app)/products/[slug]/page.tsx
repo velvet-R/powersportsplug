@@ -235,6 +235,24 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
+// dynamic meta data generation for product details pages
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params
+  const product = await getProductBySlug({ slug })
+
+  if (!product) {
+    return {
+      title: 'Product Not Found | Powersports Plug',
+      description: 'The product you are looking for does not exist.',
+    }
+  }
+
+  return {
+    title: `${product.title} | Powersports Plug`,
+    description: product.description,
+  }
+}
+
 export default async function ProductDetailsRoutePage({
   params,
 }: PageProps): Promise<React.JSX.Element> {

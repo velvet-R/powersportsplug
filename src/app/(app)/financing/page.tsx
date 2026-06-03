@@ -12,9 +12,9 @@ import WhyFinanceWithUs from '@/components/Financing/WhyFinanceWithUs'
 import React from 'react'
 
 export const metadata = {
-  title: 'In-House ATV Financing & Four-Wheeler Payment Plans',
+  title: 'Financing | Powersports Plug',
   description:
-    'Explore easy in-house four-wheeler payment terms. Zero traditional credit checks required, quick approvals, and predictable payment schedules.',
+    'Explore flexible financing options for your powersports vehicles and accessories. Learn about our easy application process, competitive rates, and how we can help you get on the road faster with affordable payment plans.',
 }
 
 export default function FinancingOverviewPage(): React.JSX.Element {

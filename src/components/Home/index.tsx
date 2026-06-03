@@ -1,5 +1,4 @@
 'use client'
-import BlogSection from '@/components/BlogSection'
 import FeaturedProducts from '@/components/FeaturedProducts'
 import FinancingSection from '@/components/FinancingSection'
 import HeroSection from '@/components/HeroSection'
@@ -29,7 +28,7 @@ export default function HomePage({ brands, featuredProducts }: HomePageProps) {
       <FinancingSection />
       <ShippingSection />
       <ReviewsSection />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <FAQSection />
       <CTASection />
     </>
