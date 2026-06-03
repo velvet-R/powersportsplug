@@ -36,6 +36,33 @@ export const SalesInquiries: CollectionConfig = {
       options: ['new', 'contacted', 'closed'],
       defaultValue: 'new',
     },
+    {
+      name: 'paymentPlan',
+      type: 'select',
+      label: 'Payment Plan',
+      required: true,
+      options: [
+        { label: 'Full Payment (Outright)', value: 'full' },
+        { label: 'Monthly Financing', value: 'financing' },
+      ],
+    },
+    {
+      // 2. New field to capture the specific payment channel
+      name: 'paymentMethod',
+      type: 'select',
+      label: 'Preferred Payment Channel',
+      required: true,
+      options: [
+        { label: 'Cash App', value: 'cash_app' },
+        { label: 'Bank Transfer', value: 'bank_transfer' },
+        { label: 'Paypal', value: 'paypal' },
+        { label: 'Zelle', value: 'zelle' },
+        { label: 'Venmo', value: 'venmo' },
+        { label: 'Chime', value: 'chime' },
+        { label: 'Apple Pay', value: 'apple_pay' },
+        { label: 'Bitcoin (BTC)', value: 'btc' },
+      ],
+    },
   ],
   hooks: {
     afterChange: [
@@ -46,6 +73,10 @@ export const SalesInquiries: CollectionConfig = {
             subject: `New Sales Inquiry from ${doc.customerName}`,
             html: `
               <h1>New Sales Inquiry</h1>
+              <div style="background: #f4f4f4; padding: 10px; margin-bottom: 20px;">
+                <p><strong>Payment Plan:</strong> ${doc.paymentPlan === 'full' ? 'Full Payment' : 'Monthly Financing'}</p>
+                <p><strong>Method:</strong> ${doc.paymentMethod.replace('_', ' ').toUpperCase()}</p>
+              </div>
               <p><strong>Name:</strong> ${doc.customerName}</p>
               <p><strong>Email:</strong> ${doc.email}</p>
               <p><strong>Phone:</strong> ${doc.phone}</p>

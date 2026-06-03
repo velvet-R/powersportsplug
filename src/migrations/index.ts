@@ -5,6 +5,8 @@ import * as migration_20260528_235004_enhanced_product_collection from './202605
 import * as migration_20260529_053157_is_featured_field from './20260529_053157_is_featured_field';
 import * as migration_20260529_211018_sales_inquiries from './20260529_211018_sales_inquiries';
 import * as migration_20260530_001013 from './20260530_001013';
+import * as migration_20260603_021905_sale_enquiries_update from './20260603_021905_sale_enquiries_update';
+import * as migration_20260603_023456 from './20260603_023456';
 
 export const migrations = [
   {
@@ -40,6 +42,16 @@ export const migrations = [
   {
     up: migration_20260530_001013.up,
     down: migration_20260530_001013.down,
-    name: '20260530_001013'
+    name: '20260530_001013',
+  },
+  {
+    up: migration_20260603_021905_sale_enquiries_update.up,
+    down: migration_20260603_021905_sale_enquiries_update.down,
+    name: '20260603_021905_sale_enquiries_update',
+  },
+  {
+    up: migration_20260603_023456.up,
+    down: migration_20260603_023456.down,
+    name: '20260603_023456'
   },
 ];

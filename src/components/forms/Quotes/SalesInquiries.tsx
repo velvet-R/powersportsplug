@@ -76,6 +76,39 @@ export default function SalesInquiryForm() {
         required
         className="h-11 bg-background border border-border rounded px-4 text-xs text-white placeholder-subtle focus:outline-none focus:border-primary-hover transition-colors"
       />
+      <div className="grid grid-cols-2 gap-4">
+        <select
+          name="paymentPlan"
+          defaultValue=""
+          required
+          className="h-11 bg-background border border-border rounded px-4 text-xs text-white focus:outline-none focus:border-primary-hover transition-colors"
+        >
+          <option value="" disabled selected>
+            Select Payment Plan *
+          </option>
+          <option value="full">Full Payment (Outright)</option>
+          <option value="financing">Monthly Financing</option>
+        </select>
+
+        <select
+          name="paymentMethod"
+          defaultValue=""
+          required
+          className="h-11 bg-background border border-border rounded px-4 text-xs text-white focus:outline-none focus:border-primary-hover transition-colors"
+        >
+          <option value="" disabled selected>
+            Select Payment Method *
+          </option>
+          <option value="cash_app">Cash App</option>
+          <option value="bank_transfer">Bank Transfer</option>
+          <option value="paypal">Paypal</option>
+          <option value="zelle">Zelle</option>
+          <option value="venmo">Venmo</option>
+          <option value="chime">Chime</option>
+          <option value="apple_pay">Apple Pay</option>
+          <option value="btc">Bitcoin (BTC)</option>
+        </select>
+      </div>
       <textarea
         name="message"
         placeholder="Additional Notes"
