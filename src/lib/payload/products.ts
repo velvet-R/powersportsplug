@@ -1,6 +1,7 @@
 import { GetProductArgs } from '@/types'
 import { mapPayloadToProduct } from '@/utilities/product-utils'
 import configPromise from '@payload-config'
+import { unstable_cache } from 'next/cache'
 import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 
@@ -197,69 +198,72 @@ export async function generateStaticParams() {
   }))
 }
 
-export const getFilterMetadata = async () => {
-  const payload = await getPayload({
-    config: configPromise,
-  })
+export const getFilterMetadata = unstable_cache(
+  async () => {
+    // 1. Everything inside here is your exact original logic
+    const payload = await getPayload({
+      config: configPromise,
+    })
 
-  const result = await payload.find({
-    collection: 'products',
-    depth: 1,
-    pagination: false,
-    limit: 1000,
-    where: {
-      _status: {
-        equals: 'published',
+    const result = await payload.find({
+      collection: 'products',
+      depth: 1,
+      pagination: false,
+      limit: 1000,
+      where: {
+        _status: {
+          equals: 'published',
+        },
       },
-    },
-  })
+    })
 
-  const brands = Array.from(
-    new Set(
-      result.docs
-        .map((p) => {
-          // If 'brand' is a relationship, Payload returns an object or ID.
-          // Access the field that holds the name (e.g., 'name', 'title', or the value itself)
-          const brandData = p.brand
-          if (typeof brandData === 'object' && brandData !== null) {
-            // Replace 'name' with the actual field name in your Brand collection
-            return (brandData as any).name || (brandData as any).title || String(brandData)
-          }
-          return brandData
-        })
-        .filter(Boolean),
-    ),
-  ) as string[]
+    const brands = Array.from(
+      new Set(
+        result.docs
+          .map((p) => {
+            const brandData = p.brand
+            if (typeof brandData === 'object' && brandData !== null) {
+              return (brandData as any).name || (brandData as any).title || String(brandData)
+            }
+            return brandData
+          })
+          .filter(Boolean),
+      ),
+    ) as string[]
 
-  // Normalize Categories
-  const categories = Array.from(
-    new Set(
-      result.docs.flatMap((p) => {
-        // 1. Get the field (it might be an array or a single object)
-        const cats = Array.isArray(p.categories) ? p.categories : [p.categories]
+    const categories = Array.from(
+      new Set(
+        result.docs.flatMap((p) => {
+          const cats = Array.isArray(p.categories) ? p.categories : [p.categories]
+          return cats.filter(Boolean).map((cat: any) => {
+            if (typeof cat === 'object') {
+              return cat.name || cat.title || 'Unknown'
+            }
+            return String(cat)
+          })
+        }),
+      ),
+    ).filter(Boolean) as string[]
 
-        // 2. Map through them and extract the name/title
-        return cats.filter(Boolean).map((cat: any) => {
-          if (typeof cat === 'object') {
-            return cat.name || cat.title || 'Unknown'
-          }
-          return String(cat)
-        })
-      }),
-    ),
-  ).filter(Boolean) as string[]
+    const prices = result.docs
+      .map((p: any) => (p as any).priceInUSD || (p as any).price) // Fallback support for your price fields
+      .filter((price: any) => typeof price === 'number')
 
-  const prices = result.docs
-    .map((p: any) => p.price)
-    .filter((price: any) => typeof price === 'number')
-
-  return {
-    brands,
-    categories,
-    minPrice: prices.length ? Math.min(...prices) : 0,
-    maxPrice: prices.length ? Math.max(...prices) : 85000,
-  }
-}
+    return {
+      brands,
+      categories,
+      minPrice: prices.length ? Math.min(...prices) : 0,
+      maxPrice: prices.length ? Math.max(...prices) : 85000,
+    }
+  },
+  // 2. The Cache Key Array (Must be unique across your application)
+  ['shop-sidebar-filter-metadata'],
+  // 3. Configuration Options (Cache duration set to 1 hour)
+  {
+    revalidate: 3600,
+    tags: ['products-metadata'],
+  },
+)
 
 export const getProductsByIds = async (ids: number[]) => {
   const payload = await getPayload({ config: configPromise })

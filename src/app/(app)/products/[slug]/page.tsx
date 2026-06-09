@@ -235,6 +235,8 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 1800 // Revalidate every 30 minutes
+
 // dynamic meta data generation for product details pages
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params

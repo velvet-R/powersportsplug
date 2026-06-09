@@ -46,6 +46,11 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      // tell the server to only assign a tiny slot per serverless invocation block
+      // this is required to prevent the server from running out of available connections
+      max: process.env.NODE_ENV === 'production' ? 2 : 10,
+      idleTimeoutMillis: 30000, // drop inactive connections after 30 seconds
+      connectionTimeoutMillis: 2000, // return an error after 2 seconds if connection could not be established
     },
   }),
   editor: lexicalEditor({

@@ -5,13 +5,13 @@ import { CompanyInfo } from '@/payload-types'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import configPromise from '@payload-config'
+import { Analytics } from '@vercel/analytics/next'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import Script from 'next/script'
 import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
 import './globals.css'
-
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const payload = await getPayload({ config: configPromise })
 
@@ -63,6 +63,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             `,
           }}
         />
+        <Analytics />
       </body>
     </html>
   )

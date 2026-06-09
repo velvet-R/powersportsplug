@@ -15,16 +15,19 @@ import CTASection from '../CTASection'
 interface HomePageProps {
   brands: Brand[]
   featuredProducts: FrontendProduct[]
+  totalCount: number
 }
 
-export default function HomePage({ brands, featuredProducts }: HomePageProps) {
+export default function HomePage({ brands, featuredProducts, totalCount }: HomePageProps) {
   const companyInfo = useCompanyInfo() as CompanyInfo | null
   return (
     <>
       <HeroSection brands={brands} />
       <ShopByCategory />
       <WhyChooseUs />
-      {featuredProducts.length > 0 && <FeaturedProducts Products={featuredProducts} />}
+      {featuredProducts.length > 0 && (
+        <FeaturedProducts Products={featuredProducts} totalCount={totalCount} />
+      )}
       <FinancingSection />
       <ShippingSection />
       <ReviewsSection />

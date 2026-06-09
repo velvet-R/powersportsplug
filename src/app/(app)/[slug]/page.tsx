@@ -8,9 +8,12 @@ import { getPayload } from 'payload'
 
 import HomePage from '@/components/Home'
 import { getBrands } from '@/lib/payload/brands'
-import { getFeaturedProducts } from '@/lib/payload/products'
+import { getFeaturedProducts, getTotalProductCount } from '@/lib/payload/products'
 import type { Brand, Page } from '@/payload-types'
 import { notFound } from 'next/navigation'
+
+// This is an example of how to use ISR with Payload. The page will be revalidated every 30 minutes (1800 seconds).
+export const revalidate = 1800
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -51,6 +54,9 @@ export default async function Page({ params }: Args) {
   // fetch featured products
   const featuredProducts = await getFeaturedProducts()
 
+  // get the total products count
+  const totalCount = await getTotalProductCount()
+
   let page = await queryPageBySlug({
     slug,
   })
@@ -72,7 +78,9 @@ export default async function Page({ params }: Args) {
       {/* <RenderBlocks blocks={layout} /> */}
 
       {/* 2. Render only on the home page right here */}
-      {slug === 'home' && <HomePage brands={brands} featuredProducts={featuredProducts} />}
+      {slug === 'home' && (
+        <HomePage brands={brands} featuredProducts={featuredProducts} totalCount={totalCount} />
+      )}
     </article>
   )
 }
