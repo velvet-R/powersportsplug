@@ -1,6 +1,7 @@
 # Powersports Plug
 
 This template is in **BETA**.
+small change
 
 This is the official [Powersports Plug](https://github.com/payloadcms/payload/blob/3.x/templates/ecommerce). This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready ecommerce website.
 
