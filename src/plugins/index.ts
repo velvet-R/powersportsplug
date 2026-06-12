@@ -15,7 +15,64 @@ import { isDocumentOwner } from '@/access/isDocumentOwner'
 import { ProductsCollection } from '@/collections/Products'
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+
+// Payload v3 Cloud Storage Core Imports
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+import type {
+  Adapter,
+  GeneratedAdapter,
+  HandleDelete,
+  HandleUpload,
+} from '@payloadcms/plugin-cloud-storage/types'
+import type { UploadApiResponse } from 'cloudinary'
+import { v2 as cloudinary } from 'cloudinary'
+
+// Initialize the native Cloudinary SDK
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
+  api_key: process.env.CLOUDINARY_API_KEY || '',
+  api_secret: process.env.CLOUDINARY_API_SECRET || '',
+})
+
+// Correctly typed Payload v3 Adapter Factory Function
+const cloudinaryAdapter = (): Adapter => {
+  return ({ collection }) => {
+    const generatedAdapter: GeneratedAdapter = {
+      name: 'cloudinary-adapter',
+
+      async handleUpload({ file }: Parameters<HandleUpload>[0]) {
+        const uploadResult = await new Promise<UploadApiResponse>((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            {
+              folder: process.env.CLOUDINARY_FOLDER || 'powersportsplug_media',
+              resource_type: 'auto',
+              timeout: 60000, // Instructs the SDK to keep the socket alive for up to 60 seconds
+            },
+            (error, result) => {
+              if (error || !result) return reject(error)
+              resolve(result)
+            },
+          )
+          uploadStream.end(file.buffer)
+        })
+
+        // Map dimensions back into Payload's tracking system
+        file.filename = uploadResult.public_id
+        file.mimeType = `${uploadResult.resource_type}/${uploadResult.format}`
+        file.filesize = uploadResult.bytes
+        return file
+      },
+
+      async handleDelete({ filename }: Parameters<HandleDelete>[0]) {
+        await cloudinary.uploader.destroy(filename)
+      },
+
+      staticHandler: async () => new Response(null, { status: 404 }),
+    }
+
+    return generatedAdapter
+  }
+}
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Powersports Plug` : 'Powersports Plug'
@@ -23,7 +80,6 @@ const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
 
 const generateURL: GenerateURL<Product | Page> = ({ doc }) => {
   const url = getServerSideURL()
-
   return doc?.slug ? `${url}/${doc.slug}` : url
 }
 
@@ -129,12 +185,19 @@ export const plugins: Plugin[] = [
       productsCollectionOverride: ProductsCollection,
     },
   }),
-  vercelBlobStorage({
+
+  // Official Payload v3 Cloud Storage Orchestrator
+  cloudStoragePlugin({
     collections: {
       media: {
+        adapter: cloudinaryAdapter(),
         disableLocalStorage: true,
+        disablePayloadAccessControl: true,
+        generateFileURL: ({ filename }) => {
+          // Resolves image paths directly via Cloudinary's secure global CDN
+          return cloudinary.url(filename, { secure: true })
+        },
       },
     },
-    token: process.env.BLOB_READ_WRITE_TOKEN || '',
   }),
 ]
