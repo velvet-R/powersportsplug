@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     loadPaths: ['./node_modules/@payloadcms/ui/dist/scss/'],
   },
   images: {
+    unoptimized: true, // Bypasses Next.js image caching proxy; loads directly from Cloudinary!
     localPatterns: [
       {
         pathname: '/api/media/file/**',
@@ -31,10 +32,16 @@ const nextConfig: NextConfig = {
           protocol: url.protocol.replace(':', '') as 'http' | 'https',
         }
       }),
-      // ── ADD THIS OBJECT HERE ──
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      // ── FIXED CLOUDINARY INTEGRATION ──
+      // This allows both online production and offline development systems to download CDN pictures safely
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
         pathname: '/**',
       },
     ],
@@ -49,9 +56,6 @@ const nextConfig: NextConfig = {
     }
     return webpackConfig
   },
-  // turbopack: {
-  //   root: path.resolve(dirname),
-  // },
 }
 
 export default withPayload(nextConfig)
