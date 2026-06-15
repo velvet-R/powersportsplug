@@ -23,6 +23,7 @@ import { Header } from '@/globals/Header'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import sharp from 'sharp'
 import { Brands } from './collections/Brands'
+import { FinancingApplications } from './collections/FinancingApplications'
 import { SalesInquiries } from './collections/SalesInquiries'
 import { CompanyInfo } from './globals/CompanyInfo'
 import { plugins } from './plugins'
@@ -42,7 +43,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Brands, SalesInquiries],
+  collections: [Users, Pages, Categories, Media, Brands, SalesInquiries, FinancingApplications],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',

@@ -1,35 +1,32 @@
 'use client'
 
+import { submitFinancingAction } from '@/lib/actions/financing'
 import { APPLICANT_CHECKLIST, TRANS_ADVANTAGES } from '@/lib/constants'
-import { ChevronRight, FileText, Phone, ShieldCheck } from 'lucide-react'
-import React, { useState } from 'react'
+import { ChevronRight, FileText, Loader2, Phone, ShieldCheck } from 'lucide-react'
+import React, { useActionState, useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 
 interface Props {
   phone: string
 }
 
 export default function FinancingApplicationForm({ phone }: Props): React.JSX.Element {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    dob: '',
-    ssn: '',
-    phone: '',
-    email: '',
-    address: '',
-    city: '',
-    state: '',
-    zip: '',
-    residenceStatus: 'Own',
-    employment: '',
-    monthlyIncome: '',
-    desiredPlan: '$299 / Month',
-  })
+  const formRef = useRef<HTMLFormElement>(null)
+  const [state, action, isPending] = useActionState(submitFinancingAction, null)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Dispatching secure intake pipeline validation logs...', formData)
-  }
+  // Track the lifecycle feedback changes safely
+  useEffect(() => {
+    if (state?.success) {
+      toast.success('Financing intake file processed successfully!', {
+        position: 'bottom-right',
+      })
+      formRef.current?.reset() // Instantly sweeps form inputs clean visually
+    }
+
+    if (state?.success === false) {
+      toast.error(state.error || 'Failed to submit application. Please verify credentials.')
+    }
+  }, [state])
 
   return (
     <section className="w-full py-20 lg:py-28 bg-background overflow-hidden" id="apply">
@@ -46,7 +43,8 @@ export default function FinancingApplicationForm({ phone }: Props): React.JSX.El
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           {/* LEFT COLUMN: THE INTERACTIVE INTAKE FORM */}
           <form
-            onSubmit={handleSubmit}
+            ref={formRef}
+            action={action}
             className="lg:col-span-7 bg-zinc-950 border border-border p-6 sm:p-8 rounded-lg space-y-8 shadow-2xl"
           >
             {/* Field Block 1: Personal Identification data matrix */}
@@ -57,46 +55,46 @@ export default function FinancingApplicationForm({ phone }: Props): React.JSX.El
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   required
+                  name="firstName"
                   type="text"
                   placeholder="First Name"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, firstName: e.target.value }))}
                 />
                 <input
                   required
+                  name="lastName"
                   type="text"
                   placeholder="Last Name"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, lastName: e.target.value }))}
                 />
                 <input
                   required
+                  name="dob"
                   type="text"
                   placeholder="Date of Birth (MM/DD/YYYY)"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, dob: e.target.value }))}
                 />
                 <input
                   required
+                  name="ssn"
                   type="password"
                   maxLength={2}
                   placeholder="Last 2 of SSN"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, ssn: e.target.value }))}
                 />
                 <input
                   required
+                  name="phone"
                   type="tel"
                   placeholder="Phone Number"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
                 />
                 <input
                   required
+                  name="email"
                   type="email"
                   placeholder="Email Address"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
                 />
               </div>
             </div>
@@ -109,44 +107,39 @@ export default function FinancingApplicationForm({ phone }: Props): React.JSX.El
               <div className="grid grid-cols-1 gap-4">
                 <input
                   required
+                  name="address"
                   type="text"
                   placeholder="Street Address"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, address: e.target.value }))}
                 />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <input
                     required
+                    name="city"
                     type="text"
                     placeholder="City"
                     className="form-input"
-                    onChange={(e) => setFormData((p) => ({ ...p, city: e.target.value }))}
                   />
                   <input
                     required
+                    name="state"
                     type="text"
                     placeholder="State"
                     className="form-input"
-                    onChange={(e) => setFormData((p) => ({ ...p, state: e.target.value }))}
                   />
                   <input
                     required
+                    name="zip"
                     type="text"
                     placeholder="Zip Code"
                     className="form-input"
-                    onChange={(e) => setFormData((p) => ({ ...p, zip: e.target.value }))}
                   />
                 </div>
                 <div className="w-full">
                   <label className="font-display text-[9px] text-zinc-500 tracking-wider uppercase block mb-1">
                     Residence Status
                   </label>
-                  <select
-                    className="form-input text-zinc-400"
-                    onChange={(e) =>
-                      setFormData((p) => ({ ...p, residenceStatus: e.target.value }))
-                    }
-                  >
+                  <select name="residenceStatus" className="form-input text-zinc-400">
                     <option value="Own">Own Outright / Financing Mortgage</option>
                     <option value="Rent">Lease Agreement / Renting</option>
                     <option value="Other">Other Arrangement</option>
@@ -163,17 +156,17 @@ export default function FinancingApplicationForm({ phone }: Props): React.JSX.El
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   required
+                  name="employment"
                   type="text"
                   placeholder="Primary Employer Name"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, employment: e.target.value }))}
                 />
                 <input
                   required
+                  name="monthlyIncome"
                   type="text"
                   placeholder="Gross Monthly Income ($)"
                   className="form-input"
-                  onChange={(e) => setFormData((p) => ({ ...p, monthlyIncome: e.target.value }))}
                 />
               </div>
             </div>
@@ -183,10 +176,7 @@ export default function FinancingApplicationForm({ phone }: Props): React.JSX.El
               <h3 className="font-display font-black text-xs text-primary-hover uppercase tracking-widest border-b border-border/60 pb-1.5">
                 Desired Payment Plan
               </h3>
-              <select
-                className="form-input text-zinc-400"
-                onChange={(e) => setFormData((p) => ({ ...p, desiredPlan: e.target.value }))}
-              >
+              <select name="desiredPlan" className="form-input text-zinc-400">
                 <option value="$200 / Month">Entry Level Tier ($200 / Month)</option>
                 <option value="$299 / Month">Trail Master Tier ($299 / Month)</option>
                 <option value="$399 / Month">Performance Pro Tier ($399 / Month)</option>
@@ -197,9 +187,18 @@ export default function FinancingApplicationForm({ phone }: Props): React.JSX.El
             {/* Action Submit Trigger Button */}
             <button
               type="submit"
-              className="w-full h-12 bg-primary-hover hover:bg-primary text-white hover:text-secondary font-display text-xs font-black tracking-widest uppercase rounded-sm flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.99] transition-all cursor-pointer"
+              disabled={isPending}
+              className="w-full h-12 bg-primary-hover hover:bg-primary text-white hover:text-secondary font-display text-xs font-black tracking-widest uppercase rounded-sm flex items-center justify-center gap-1.5 shadow-xl active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Transmit Application Securely <ChevronRight className="w-4 h-4" />
+              {isPending ? (
+                <>
+                  Transmitting Application... <Loader2 className="w-4 h-4 animate-spin" />
+                </>
+              ) : (
+                <>
+                  Transmit Application Securely <ChevronRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
