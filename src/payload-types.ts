@@ -79,6 +79,7 @@ export interface Config {
     brands: Brand;
     'sales-inquiries': SalesInquiry;
     'financing-applications': FinancingApplication;
+    'contact-inquiries': ContactInquiry;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -115,6 +116,7 @@ export interface Config {
     brands: BrandsSelect<false> | BrandsSelect<true>;
     'sales-inquiries': SalesInquiriesSelect<false> | SalesInquiriesSelect<true>;
     'financing-applications': FinancingApplicationsSelect<false> | FinancingApplicationsSelect<true>;
+    'contact-inquiries': ContactInquiriesSelect<false> | ContactInquiriesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -1113,6 +1115,22 @@ export interface FinancingApplication {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries".
+ */
+export interface ContactInquiry {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  cityState: string;
+  interest: string;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1179,6 +1197,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'financing-applications';
         value: number | FinancingApplication;
+      } | null)
+    | ({
+        relationTo: 'contact-inquiries';
+        value: number | ContactInquiry;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1550,6 +1572,21 @@ export interface FinancingApplicationsSelect<T extends boolean = true> {
   employment?: T;
   monthlyIncome?: T;
   desiredPlan?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries_select".
+ */
+export interface ContactInquiriesSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  email?: T;
+  phone?: T;
+  cityState?: T;
+  interest?: T;
+  message?: T;
   updatedAt?: T;
   createdAt?: T;
 }

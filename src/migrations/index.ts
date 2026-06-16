@@ -8,6 +8,7 @@ import * as migration_20260530_001013 from './20260530_001013';
 import * as migration_20260603_021905_sale_enquiries_update from './20260603_021905_sale_enquiries_update';
 import * as migration_20260603_023456 from './20260603_023456';
 import * as migration_20260615_230500_financing from './20260615_230500_financing';
+import * as migration_20260616_000009_contact_inquiries from './20260616_000009_contact_inquiries';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20260615_230500_financing.up,
     down: migration_20260615_230500_financing.down,
-    name: '20260615_230500_financing'
+    name: '20260615_230500_financing',
+  },
+  {
+    up: migration_20260616_000009_contact_inquiries.up,
+    down: migration_20260616_000009_contact_inquiries.down,
+    name: '20260616_000009_contact_inquiries'
   },
 ];
