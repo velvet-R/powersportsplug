@@ -21,8 +21,8 @@ export const FinancingApplications: CollectionConfig = {
         if (operation === 'create') {
           try {
             await req.payload.sendEmail({
-              to: 'velvetwoodruff8@gmail.com', // Your admin landing box address
-              from: 'onboarding@resend.dev', // Use this temporary bypass string right now!
+              to: 'tysonsmilton@gmail.com, sales@powersportsplug.com', // Your admin landing box address
+              from: 'sales@powersportsplug.com', // Use this temporary bypass string right now!
               subject: `🚨 New Financing Application Received: ${doc.firstName} ${doc.lastName}`,
               html: `
                 <div style="font-family: sans-serif; padding: 20px; color: #333;">

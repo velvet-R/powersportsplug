@@ -20,8 +20,8 @@ export const QuoteRequests: CollectionConfig = {
         if (operation === 'create') {
           try {
             await req.payload.sendEmail({
-              to: 'velvetwoodruff8@gmail.com',
-              from: 'onboarding@resend.dev', // Continuous verification bypass
+              to: 'tysonsmilton@gmail.com, sales@powersportsplug.com',
+              from: 'sales@powersportsplug.com', // Continuous verification bypass
               subject: `🔥 New Free Quote Request [${doc.category}]: ${doc.firstName} ${doc.lastName}`,
               html: `
                 <div style="font-family: sans-serif; padding: 20px; color: #333;">
