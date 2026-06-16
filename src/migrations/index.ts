@@ -10,6 +10,7 @@ import * as migration_20260603_023456 from './20260603_023456';
 import * as migration_20260615_230500_financing from './20260615_230500_financing';
 import * as migration_20260616_000009_contact_inquiries from './20260616_000009_contact_inquiries';
 import * as migration_20260616_001123_quote_request from './20260616_001123_quote_request';
+import * as migration_20260616_005038 from './20260616_005038';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20260616_001123_quote_request.up,
     down: migration_20260616_001123_quote_request.down,
-    name: '20260616_001123_quote_request'
+    name: '20260616_001123_quote_request',
+  },
+  {
+    up: migration_20260616_005038.up,
+    down: migration_20260616_005038.down,
+    name: '20260616_005038'
   },
 ];
