@@ -1,5 +1,6 @@
 'use client'
 
+import { submitContactAction } from '@/lib/actions/contact'
 import { CompanyInfo } from '@/payload-types'
 import { useCompanyInfo } from '@/providers/CompanyProvider'
 import { motion } from 'framer-motion'
@@ -7,32 +8,34 @@ import {
   CheckCircle,
   Clock,
   CornerDownRight,
+  Loader2,
   Mail,
   Phone,
   Send,
   ShieldCheck,
   Truck,
 } from 'lucide-react'
-import React, { useState } from 'react'
+import type { ReactElement } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 
-export default function ContactPage(): React.JSX.Element {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    cityState: '',
-    interest: '',
-    message: '',
-  })
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle secure off-platform agent routing here
-    console.log('Routing lead details to agent pipeline:', formData)
-  }
-
+export default function ContactPage(): ReactElement {
+  const formRef = useRef<HTMLFormElement>(null)
+  const [state, action, isPending] = useActionState(submitContactAction, null)
   const companyInfo: CompanyInfo | null = useCompanyInfo()
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success('Message submitted successfully to an agent!', {
+        position: 'bottom-right',
+      })
+      formRef.current?.reset() // Visually flushes all inputs clean
+    }
+
+    if (state?.success === false) {
+      toast.error(state.error || 'Failed to submit message. Please check input parameters.')
+    }
+  }, [state])
 
   return (
     <main className="w-full bg-background min-h-screen pt-24 pb-20 overflow-hidden relative">
@@ -41,7 +44,7 @@ export default function ContactPage(): React.JSX.Element {
       <div className="absolute top-1/4 -right-40 w-96 h-96 bg-primary-hover/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-zinc-900/40 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* ── SECTION 01: HERO HEADER (FULL WIDTH) ── */}
+      {/* ── SECTION 01: HERO HEADER ── */}
       <section className="w-full px-4 sm:px-8 lg:px-16 mx-auto max-w-screen-2xl border-b border-border/40 pb-16 mb-16">
         <div className="max-w-4xl">
           <div className="flex items-center gap-2 mb-3">
@@ -63,7 +66,7 @@ export default function ContactPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* ── SECTION 02: TRI-METRIC QUICK CONTACT CARDS (FULL WIDTH) ── */}
+      {/* ── SECTION 02: TRI-METRIC QUICK CONTACT CARDS ── */}
       <section className="w-full px-4 sm:px-8 lg:px-16 mx-auto max-w-screen-2xl mb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Call Directly */}
@@ -80,10 +83,10 @@ export default function ContactPage(): React.JSX.Element {
                   Voice Dispatch
                 </span>
                 <a
-                  href={`tel:${companyInfo?.phone || '18005550199'}`}
+                  href={`tel:${companyInfo?.phone || '16074565677'}`}
                   className="font-display font-black text-lg sm:text-xl text-white tracking-wide hover:text-primary-hover transition-colors"
                 >
-                  {companyInfo?.phone || '1 (800) 555-0199'}
+                  {companyInfo?.phone || '1 (607) 456-5677'}
                 </a>
               </div>
             </div>
@@ -103,10 +106,10 @@ export default function ContactPage(): React.JSX.Element {
                   Secure Digital Inbox
                 </span>
                 <a
-                  href={`mailto:${companyInfo?.email || 'agents@showroom.com'}`}
+                  href={`mailto:${companyInfo?.email || 'sales@powersportsplug.com'}`}
                   className="font-display font-black text-lg sm:text-xl text-white tracking-wide hover:text-primary-hover transition-colors"
                 >
-                  {companyInfo?.email || 'agents@showroom.com'}
+                  {companyInfo?.email || 'sales@powersportsplug.com'}
                 </a>
               </div>
             </div>
@@ -137,10 +140,10 @@ export default function ContactPage(): React.JSX.Element {
         </div>
       </section>
 
-      {/* ── SECTION 03: SPLIT DEEP MATRIX HUB (LEFT FORM, RIGHT SPEC INFO) ── */}
+      {/* ── SECTION 03: SPLIT DEEP MATRIX HUB ── */}
       <section className="w-full px-4 sm:px-8 lg:px-16 mx-auto max-w-screen-2xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* ── LEFT COLUMN: SECURE BRIEFING FORM (7 COLS) ── */}
+          {/* ── LEFT COLUMN: SECURE BRIEFING FORM ── */}
           <div className="lg:col-span-7 bg-surface/10 backdrop-blur-md border border-border/50 rounded-xl p-6 sm:p-8">
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-2">
@@ -154,7 +157,7 @@ export default function ContactPage(): React.JSX.Element {
               </h2>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form ref={formRef} action={action} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-display text-[10px] font-black tracking-widest text-zinc-400 uppercase mb-2">
@@ -163,8 +166,7 @@ export default function ContactPage(): React.JSX.Element {
                   <input
                     type="text"
                     required
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    name="firstName"
                     className="w-full h-11 bg-zinc-950 border border-border/60 rounded px-4 text-xs font-body text-white focus:outline-none focus:border-zinc-500 transition-colors"
                     placeholder="John"
                   />
@@ -176,8 +178,7 @@ export default function ContactPage(): React.JSX.Element {
                   <input
                     type="text"
                     required
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    name="lastName"
                     className="w-full h-11 bg-zinc-950 border border-border/60 rounded px-4 text-xs font-body text-white focus:outline-none focus:border-zinc-500 transition-colors"
                     placeholder="Doe"
                   />
@@ -192,8 +193,7 @@ export default function ContactPage(): React.JSX.Element {
                   <input
                     type="email"
                     required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    name="email"
                     className="w-full h-11 bg-zinc-950 border border-border/60 rounded px-4 text-xs font-body text-white focus:outline-none focus:border-zinc-500 transition-colors"
                     placeholder="johndoe@example.com"
                   />
@@ -205,8 +205,7 @@ export default function ContactPage(): React.JSX.Element {
                   <input
                     type="tel"
                     required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    name="phone"
                     className="w-full h-11 bg-zinc-950 border border-border/60 rounded px-4 text-xs font-body text-white focus:outline-none focus:border-zinc-500 transition-colors"
                     placeholder="(555) 000-0000"
                   />
@@ -220,8 +219,7 @@ export default function ContactPage(): React.JSX.Element {
                 <input
                   type="text"
                   required
-                  value={formData.cityState}
-                  onChange={(e) => setFormData({ ...formData, cityState: e.target.value })}
+                  name="cityState"
                   className="w-full h-11 bg-zinc-950 border border-border/60 rounded px-4 text-xs font-body text-white focus:outline-none focus:border-zinc-500 transition-colors"
                   placeholder="Dallas, TX"
                 />
@@ -234,8 +232,8 @@ export default function ContactPage(): React.JSX.Element {
                 <div className="relative">
                   <select
                     required
-                    value={formData.interest}
-                    onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+                    name="interest"
+                    defaultValue=""
                     className="w-full h-11 bg-zinc-950 border border-border/60 rounded px-4 text-xs font-display font-bold text-white tracking-wide focus:outline-none focus:border-zinc-500 appearance-none cursor-pointer"
                   >
                     <option value="" disabled className="text-zinc-600">
@@ -267,8 +265,7 @@ export default function ContactPage(): React.JSX.Element {
                 <textarea
                   rows={5}
                   required
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  name="message"
                   className="w-full bg-zinc-950 border border-border/60 rounded p-4 text-xs font-body text-white focus:outline-none focus:border-zinc-500 transition-colors resize-none leading-relaxed"
                   placeholder="Outline the details of the machine or terms you want to evaluate..."
                 />
@@ -276,15 +273,25 @@ export default function ContactPage(): React.JSX.Element {
 
               <button
                 type="submit"
-                className="w-full h-12 bg-primary-hover hover:bg-primary-hover/90 text-white font-display text-xs font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(255,69,0,0.15)] transition-all duration-200"
+                disabled={isPending}
+                className="w-full h-12 bg-primary-hover hover:bg-primary-hover/90 text-white font-display text-xs font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(255,69,0,0.15)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>Submit Form to Dedicated Agent</span>
-                <Send className="w-3.5 h-3.5" />
+                {isPending ? (
+                  <>
+                    <span>Transmitting Message...</span>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    <span>Submit Form to Dedicated Agent</span>
+                    <Send className="w-3.5 h-3.5" />
+                  </>
+                )}
               </button>
             </form>
           </div>
 
-          {/* ── RIGHT COLUMN: INFO STACK TRIO (5 COLS) ── */}
+          {/* ── RIGHT COLUMN: INFO STACK TRIO ── */}
           <div className="lg:col-span-5 space-y-6">
             {/* Sub-Card 1: Premium Unified Contact Info Directory */}
             <div className="bg-zinc-950 border border-border/60 rounded-xl p-6 relative overflow-hidden">
@@ -303,10 +310,10 @@ export default function ContactPage(): React.JSX.Element {
                       Voice Dispatch:
                     </span>
                     <a
-                      href={`tel:${companyInfo.phone || '1 607 456 5677'}`}
+                      href={`tel:${companyInfo?.phone || '16074565677'}`}
                       className="text-zinc-200 hover:text-primary-hover font-display font-black transition-colors"
                     >
-                      {companyInfo.phone || '1 607 456 5677'}
+                      {companyInfo?.phone || '1 607 456 5677'}
                     </a>
                   </div>
                 </div>
@@ -319,10 +326,10 @@ export default function ContactPage(): React.JSX.Element {
                       Secure Inbox:
                     </span>
                     <a
-                      href={`mailto:${companyInfo.email || 'test@mail.com'}`}
+                      href={`mailto:${companyInfo?.email || 'sales@powersportsplug.com'}`}
                       className="text-zinc-200 hover:text-primary-hover font-display font-black transition-colors"
                     >
-                      {companyInfo.email || 'test@mail.com'}
+                      {companyInfo?.email || 'sales@powersportsplug.com'}
                     </a>
                   </div>
                 </div>
@@ -378,7 +385,7 @@ export default function ContactPage(): React.JSX.Element {
               </div>
             </div>
 
-            {/* Sub-Card 3: Why Choose Us Value Injection */}
+            {/* Sub-Card 3: Value Deck */}
             <div className="bg-zinc-950 border border-border/60 rounded-xl p-6 relative overflow-hidden">
               <div className="mb-4 pb-3 border-b border-border/40">
                 <h3 className="font-display font-black text-xs text-white uppercase tracking-wider">
@@ -387,7 +394,6 @@ export default function ContactPage(): React.JSX.Element {
               </div>
 
               <div className="space-y-4">
-                {/* Financing Point */}
                 <div className="flex items-start gap-3">
                   <ShieldCheck className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
@@ -401,7 +407,6 @@ export default function ContactPage(): React.JSX.Element {
                   </div>
                 </div>
 
-                {/* Inspection Point */}
                 <div className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
@@ -415,7 +420,6 @@ export default function ContactPage(): React.JSX.Element {
                   </div>
                 </div>
 
-                {/* Logistics Point */}
                 <div className="flex items-start gap-3">
                   <Truck className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
                   <div>
@@ -425,20 +429,6 @@ export default function ContactPage(): React.JSX.Element {
                     <p className="font-body text-[11px] text-muted-foreground leading-relaxed mt-0.5">
                       Fully insured, enclosed cross-border logistics delivering directly to your
                       coordinate location.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Payments Point */}
-                <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-primary-hover mt-0.5 shrink-0" />
-                  <div>
-                    <h4 className="font-display font-black text-xs text-white uppercase tracking-wide">
-                      Flexible Payment Plans
-                    </h4>
-                    <p className="font-body text-[11px] text-muted-foreground leading-relaxed mt-0.5">
-                      Coordinate directly with your dedicated field agent to structure terms
-                      tailored to your schedule.
                     </p>
                   </div>
                 </div>

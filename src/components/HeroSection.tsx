@@ -1,5 +1,6 @@
 'use client'
 
+import { submitFreeQuoteAction } from '@/lib/actions/quote-request'
 import { STATES } from '@/lib/constants'
 import { Brand, CompanyInfo } from '@/payload-types'
 import { useCompanyInfo } from '@/providers/CompanyProvider'
@@ -9,6 +10,7 @@ import {
   CheckCircle2,
   Clock,
   FileText,
+  Loader2,
   Phone,
   Search,
   ShieldCheck,
@@ -18,7 +20,8 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useActionState, useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 import heroImg from '../../public/images/herobanner.jpg'
 import MarqueeBanner from './MarqueeBanner'
 
@@ -41,15 +44,11 @@ const STATS = [
   { value: '4.9★', label: 'Customer Rating' },
 ]
 
-// Framer Motion Variants for Staggered Children
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
   },
 }
 
@@ -67,51 +66,35 @@ interface HeroProps {
 }
 
 export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    state: '',
-    category: '',
-    brand: '',
-    budget: '',
-    financing: '',
-    notes: '',
-  })
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(formData)
-  }
-
-  // hook onto the global company info context
+  const formRef = useRef<HTMLFormElement>(null)
+  const [state, action, isPending] = useActionState(submitFreeQuoteAction, null)
   const companyInfo: CompanyInfo | null = useCompanyInfo()
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success('Quote request registered! An agent will call you shortly.', {
+        position: 'top-center',
+      })
+      formRef.current?.reset() // Resets the UI fields cleanly
+    }
+    if (state?.success === false) {
+      toast.error(state.error || 'Failed to initialize request.')
+    }
+  }, [state])
 
   return (
     <>
       <section className="relative w-full min-h-[95vh] lg:min-h-screen flex items-center overflow-hidden bg-background">
-        {/* ── Cinematic Motion Background ── */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
             className="absolute inset-0 w-full h-full"
-            initial={{ scale: 1.1, x: 0, y: 0 }}
+            initial={{ scale: 1.1 }}
             animate={{
               scale: [1.1, 1.22, 1.1],
               x: [0, -15, 0],
               y: [0, -10, 0],
             }}
-            transition={{
-              duration: 24,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
+            transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
           >
             <Image
               src={heroImg}
@@ -128,14 +111,13 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
 
         <div className="relative z-20 mx-auto max-w-screen-2xl w-full px-4 sm:px-8 lg:px-16 py-16 lg:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* ── LEFT COLUMN: Core Content & CTA Suite ── */}
+            {/* LEFT COLUMN: Content */}
             <motion.div
               className="lg:col-span-7 flex flex-col justify-center text-left"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
             >
-              {/* Top Eyebrow Badging */}
               <motion.div className="flex items-center gap-2 mb-6" variants={itemVariants}>
                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
@@ -145,7 +127,6 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                 </span>
               </motion.div>
 
-              {/* Typography Heading Block */}
               <motion.h1
                 className="font-display font-black text-6xl sm:text-7xl lg:text-6xl xl:text-8xl text-white leading-[0.9] tracking-normal uppercase mb-6"
                 variants={itemVariants}
@@ -158,7 +139,6 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                 ATV DEALER
               </motion.h1>
 
-              {/* Supporting Text Paragraph */}
               <motion.p
                 className="max-w-xl font-body text-sm sm:text-base text-muted-foreground leading-relaxed mb-6"
                 variants={itemVariants}
@@ -169,12 +149,9 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                 <span className="text-white font-bold underline decoration-primary decoration-2">
                   500+ premium
                 </span>{' '}
-                new and used machines with 100% guaranteed financing approval terms. Whether you're
-                on the farm or hitting trails, we get you riding faster with fully-insured
-                nationwide delivery directly to your driveway.
+                new and used machines with 100% guaranteed financing approval terms.
               </motion.p>
 
-              {/* Added CTA Buttons Suite */}
               <motion.div
                 className="flex flex-wrap items-center gap-3 mb-8"
                 variants={itemVariants}
@@ -196,7 +173,7 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                 </Link>
 
                 <a
-                  href={`tel:${companyInfo?.phone || '123-456-7890'}`} // Fallback to a default number if companyInfo is not available
+                  href={`tel:${companyInfo?.phone || '123-456-7890'}`}
                   className="inline-flex items-center gap-2 px-6 h-12 bg-zinc-900/50 hover:bg-zinc-900 text-muted-foreground hover:text-white font-display text-xs font-bold tracking-widest uppercase rounded border border-border transition-all duration-200"
                 >
                   <Phone className="w-4 h-4 text-zinc-400" />
@@ -204,36 +181,30 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                 </a>
               </motion.div>
 
-              {/* Brand/Trust Pills (Positioned cleanly right before stats) */}
-              {/* Brand/Trust Pills (Enhanced with Layout Animations & Custom Config Glows) */}
               <motion.div className="flex flex-wrap gap-2.5 mb-8" variants={itemVariants}>
                 {TRUST_BADGES.map((badge, i) => (
                   <motion.div
                     key={i}
                     className="flex items-center gap-2 px-3.5 py-2 bg-surface/60 backdrop-blur-md border border-border rounded-full text-foreground cursor-default select-none shadow-sm"
-                    // Framer Motion Hover & Tap State Styling
                     whileHover={{
                       scale: 1.04,
-                      borderColor: '#3F3F46', // Maps to your config token: border-hover
+                      borderColor: '#3F3F46',
                       color: '#FFFFFF',
-                      boxShadow: '0 0 20px rgba(255, 69, 0, 0.25)', // Matches your custom glow-orange spec
+                      boxShadow: '0 0 20px rgba(255, 69, 0, 0.25)',
                     }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                   >
-                    {/* Icon Wrapper applying your config's pulse keyframe on a slight delay loop */}
                     <div className="flex items-center justify-center text-primary-hover animate-pulse">
                       <badge.icon className="w-4 h-4 filter drop-shadow-[0_0_4px_rgba(255,69,0,0.4)]" />
                     </div>
-
-                    <span className="font-display text-[10px] font-bold tracking-widest uppercase transition-colors duration-200">
+                    <span className="font-display text-[10px] font-bold tracking-widest uppercase">
                       {badge.label}
                     </span>
                   </motion.div>
                 ))}
               </motion.div>
 
-              {/* Performance Layout Metric Matrix */}
               <motion.div
                 className="grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-border pt-8 mt-2"
                 variants={itemVariants}
@@ -251,7 +222,7 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
               </motion.div>
             </motion.div>
 
-            {/* ── RIGHT COLUMN: High-Conversion Form Engine ── */}
+            {/* RIGHT COLUMN: Form Engine */}
             <div className="lg:col-span-5 w-full">
               <motion.div
                 className="relative bg-surface/90 backdrop-blur-xl border border-border rounded-xl p-5 sm:p-8 shadow-card overflow-hidden"
@@ -260,7 +231,6 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                 transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.3 }}
                 whileHover={{ boxShadow: '0 12px 50px rgba(0,0,0,0.7)' }}
               >
-                {/* Decorative Accent Glow */}
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[80px] pointer-events-none" />
 
                 <div className="relative z-10 mb-6">
@@ -268,19 +238,19 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                     Get A <span className="text-primary-hover">Free Quote</span>
                   </h3>
                   <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 leading-relaxed">
-                    Fill in your details and one of our specialists will contact you within update{' '}
-                    <strong className="text-white">1 hour</strong> with pricing, financing options,
-                    and vehicle availability.
+                    Fill in your details and one of our specialists will contact you within{' '}
+                    <strong className="text-white">1 hour</strong> with pricing.
                   </p>
                 </div>
 
-                {/* Form Input Blocks */}
-                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-3 relative z-10">
+                <form
+                  ref={formRef}
+                  action={action}
+                  className="grid grid-cols-2 gap-3 relative z-10"
+                >
                   <input
                     type="text"
                     name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
                     placeholder="First Name"
                     required
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-white placeholder-subtle focus:outline-none focus:border-primary-hover transition-colors"
@@ -288,8 +258,6 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                   <input
                     type="text"
                     name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
                     placeholder="Last Name"
                     required
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-white placeholder-subtle focus:outline-none focus:border-primary-hover transition-colors"
@@ -297,8 +265,6 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                   <input
                     type="tel"
                     name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
                     placeholder="Phone Number"
                     required
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-white placeholder-subtle focus:outline-none focus:border-primary-hover transition-colors"
@@ -306,19 +272,15 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
-                    onChange={handleChange}
                     placeholder="Email Address"
                     required
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-white placeholder-subtle focus:outline-none focus:border-primary-hover transition-colors"
                   />
 
-                  {/* Dropdowns fixed strictly to clear dark backgrounds */}
                   <select
                     name="state"
-                    value={formData.state}
-                    onChange={handleChange}
                     required
+                    defaultValue=""
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-muted-foreground focus:outline-none focus:border-primary-hover focus:text-white cursor-pointer transition-colors"
                   >
                     <option value="" disabled className="bg-background text-subtle">
@@ -333,9 +295,8 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
 
                   <select
                     name="category"
-                    value={formData.category}
-                    onChange={handleChange}
                     required
+                    defaultValue=""
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-muted-foreground focus:outline-none focus:border-primary-hover focus:text-white cursor-pointer transition-colors"
                   >
                     <option value="" disabled className="bg-background text-subtle">
@@ -350,9 +311,8 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
 
                   <select
                     name="brand"
-                    value={formData.brand}
-                    onChange={handleChange}
                     required
+                    defaultValue=""
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-muted-foreground focus:outline-none focus:border-primary-hover focus:text-white cursor-pointer transition-colors"
                   >
                     <option value="" disabled className="bg-background text-subtle">
@@ -367,9 +327,8 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
 
                   <select
                     name="budget"
-                    value={formData.budget}
-                    onChange={handleChange}
                     required
+                    defaultValue=""
                     className="col-span-1 h-11 bg-background border border-border rounded px-4 text-xs text-muted-foreground focus:outline-none focus:border-primary-hover focus:text-white cursor-pointer transition-colors"
                   >
                     <option value="" disabled className="bg-background text-subtle">
@@ -384,9 +343,8 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
 
                   <select
                     name="financing"
-                    value={formData.financing}
-                    onChange={handleChange}
                     required
+                    defaultValue=""
                     className="col-span-2 h-11 bg-background border border-border rounded px-4 text-xs text-muted-foreground focus:outline-none focus:border-primary-hover focus:text-white cursor-pointer transition-colors"
                   >
                     <option value="" disabled className="bg-background text-subtle">
@@ -405,23 +363,32 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
 
                   <textarea
                     name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    placeholder="Tell us anything else - specific model, color, year preference or any question..."
+                    placeholder="Tell us anything else - specific model, color preference..."
                     className="col-span-2 h-20 bg-background border border-border rounded p-4 text-xs text-white placeholder-subtle focus:outline-none focus:border-primary-hover transition-colors resize-none pt-3"
                   />
 
                   <motion.button
                     type="submit"
-                    className="col-span-2 h-12 mt-2 bg-primary-hover hover:bg-primary-hover text-white font-display text-[11px] font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 group border-none outline-none cursor-pointer"
-                    whileHover={{ scale: 1.01, boxShadow: '0 0 25px rgba(255, 69, 0, 0.45)' }}
-                    whileTap={{ scale: 0.99 }}
+                    disabled={isPending}
+                    className="col-span-2 h-12 mt-2 bg-primary-hover hover:bg-primary-hover text-white font-display text-[11px] font-black tracking-widest uppercase rounded flex items-center justify-center gap-2 group border-none outline-none cursor-pointer disabled:opacity-50"
+                    whileHover={
+                      isPending ? {} : { scale: 1.01, boxShadow: '0 0 25px rgba(255, 69, 0, 0.45)' }
+                    }
+                    whileTap={isPending ? {} : { scale: 0.99 }}
                   >
-                    <span>Send My Free Quote Request</span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    {isPending ? (
+                      <>
+                        <span>Sending Request...</span>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        <span>Send My Free Quote Request</span>
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </>
+                    )}
                   </motion.button>
 
-                  {/* Secure Form Disclaimers */}
                   <div className="col-span-2 text-center mt-4 space-y-1.5 border-t border-border pt-4">
                     <div className="flex items-center justify-center gap-4 text-[9px] font-bold tracking-widest uppercase text-muted-foreground">
                       <span className="flex items-center gap-1">
@@ -441,19 +408,17 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
           </div>
         </div>
 
-        {/* Subtle edge blend mask into your layout flow */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent z-10 pointer-events-none" />
       </section>
       <MarqueeBanner />
+
       {/* ── BRANDS WE CARRY SECTION ── */}
       <section className="w-full bg-surface py-12 border-t border-b border-border/50 overflow-hidden">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-8 lg:px-16 text-center">
-          {/* Section Sub-header */}
           <h2 className="font-display font-black text-xs tracking-[0.2em] text-white/60 uppercase mb-8">
             BRANDS WE CARRY
           </h2>
 
-          {/* Staggered Grid Wrapper */}
           <motion.div
             className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 mx-auto"
             initial="hidden"
@@ -461,17 +426,13 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
             viewport={{ once: true, margin: '-50px' }}
             variants={{
               hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.05 },
-              },
+              visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
             }}
           >
             {brands.map((brand) => (
               <motion.span
                 key={brand.id}
                 className="font-bold text-white hover:text-primary-hover uppercase tracking-wider transition-colors duration-200 select-none"
-                // Entrance animation variant rules
                 variants={{
                   hidden: { opacity: 0, y: 15 },
                   visible: {
@@ -480,10 +441,9 @@ export default function HeroSection({ brands }: HeroProps): React.JSX.Element {
                     transition: { type: 'spring', stiffness: 100, damping: 15 },
                   },
                 }}
-                // Micro-interactions on interaction
                 whileHover={{
                   scale: 1.1,
-                  color: 'var(--color-primary-hover, #FF4500)', // Smooth transition to your orange primary accent
+                  color: '#FF4500',
                   textShadow: '0 0 12px rgba(255, 69, 0, 0.4)',
                 }}
                 whileTap={{ scale: 0.95 }}
