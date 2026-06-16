@@ -25,6 +25,7 @@ import sharp from 'sharp'
 import { Brands } from './collections/Brands'
 import { ContactInquiries } from './collections/ContactInquiries'
 import { FinancingApplications } from './collections/FinancingApplications'
+import { QuoteRequests } from './collections/QuoteRequest'
 import { SalesInquiries } from './collections/SalesInquiries'
 import { CompanyInfo } from './globals/CompanyInfo'
 import { plugins } from './plugins'
@@ -53,6 +54,7 @@ export default buildConfig({
     SalesInquiries,
     FinancingApplications,
     ContactInquiries,
+    QuoteRequests,
   ],
   db: postgresAdapter({
     pool: {

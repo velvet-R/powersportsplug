@@ -80,6 +80,7 @@ export interface Config {
     'sales-inquiries': SalesInquiry;
     'financing-applications': FinancingApplication;
     'contact-inquiries': ContactInquiry;
+    'quote-requests': QuoteRequest;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -117,6 +118,7 @@ export interface Config {
     'sales-inquiries': SalesInquiriesSelect<false> | SalesInquiriesSelect<true>;
     'financing-applications': FinancingApplicationsSelect<false> | FinancingApplicationsSelect<true>;
     'contact-inquiries': ContactInquiriesSelect<false> | ContactInquiriesSelect<true>;
+    'quote-requests': QuoteRequestsSelect<false> | QuoteRequestsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -1131,6 +1133,25 @@ export interface ContactInquiry {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quote-requests".
+ */
+export interface QuoteRequest {
+  id: number;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  state: string;
+  category: string;
+  brand: string;
+  budget: string;
+  financing: string;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1201,6 +1222,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-inquiries';
         value: number | ContactInquiry;
+      } | null)
+    | ({
+        relationTo: 'quote-requests';
+        value: number | QuoteRequest;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1587,6 +1612,24 @@ export interface ContactInquiriesSelect<T extends boolean = true> {
   cityState?: T;
   interest?: T;
   message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quote-requests_select".
+ */
+export interface QuoteRequestsSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  phone?: T;
+  email?: T;
+  state?: T;
+  category?: T;
+  brand?: T;
+  budget?: T;
+  financing?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
