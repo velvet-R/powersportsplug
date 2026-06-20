@@ -1,6 +1,7 @@
 import CartDrawer from '@/components/Cart/CardDrawer'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import WhatsAppWidget from '@/components/WhatsappAppWidget'
 import { CompanyInfo } from '@/payload-types'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
@@ -27,6 +28,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     console.error('Failed to fetch company info:', error)
   }
 
+  const cleanPhone = companyInfo?.phone?.replace(/\D/g, '')
+
   return (
     <html
       className={`${GeistSans.variable} ${GeistMono.variable} dark`}
@@ -42,7 +45,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <LivePreviewListener /> */}
           <Header />
           <CartDrawer />
-          <main>{children}</main>
+          <main>
+            {children}
+            {/* Floating conversion layer positioned out of the right-side text column streams */}
+            <WhatsAppWidget
+              phoneNumber={cleanPhone || '+1 (929) 839-1082'}
+              companyName={companyInfo?.companyName}
+            />
+          </main>
           <Footer />
         </Providers>
         {/* Tawk.to Integration */}
