@@ -100,12 +100,10 @@ export default function SalesInquiryForm() {
             Select Payment Method *
           </option>
           <option value="cash_app">Cash App</option>
-          <option value="bank_transfer">Bank Transfer</option>
+          <option value="bank_transfer">Bank Transfer Wire</option>
           <option value="paypal">Paypal</option>
           <option value="zelle">Zelle</option>
-          <option value="venmo">Venmo</option>
           <option value="chime">Chime</option>
-          <option value="apple_pay">Apple Pay</option>
           <option value="btc">Bitcoin (BTC)</option>
         </select>
       </div>

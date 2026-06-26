@@ -54,10 +54,8 @@ export const SalesInquiries: CollectionConfig = {
       required: true,
       options: [
         { label: 'Cash App', value: 'cash_app' },
-        { label: 'Bank Transfer', value: 'bank_transfer' },
-        { label: 'Paypal', value: 'paypal' },
+        { label: 'Bank Transfer Wire', value: 'bank_transfer' },
         { label: 'Zelle', value: 'zelle' },
-        { label: 'Venmo', value: 'venmo' },
         { label: 'Chime', value: 'chime' },
         { label: 'Apple Pay', value: 'apple_pay' },
         { label: 'Bitcoin (BTC)', value: 'btc' },

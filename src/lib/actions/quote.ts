@@ -32,9 +32,7 @@ export async function submitQuoteAction(prevState: any, formData: FormData) {
     const paymentMethod = formData.get('paymentMethod') as
       | 'cash_app'
       | 'bank_transfer'
-      | 'paypal'
       | 'zelle'
-      | 'venmo'
       | 'chime'
       | 'apple_pay'
       | 'btc'
