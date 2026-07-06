@@ -1085,7 +1085,7 @@ export interface SalesInquiry {
     | null;
   status?: ('new' | 'contacted' | 'closed') | null;
   paymentPlan: 'full' | 'financing';
-  paymentMethod: 'cash_app' | 'bank_transfer' | 'paypal' | 'zelle' | 'venmo' | 'chime' | 'apple_pay' | 'btc';
+  paymentMethod: 'cash_app' | 'bank_transfer' | 'zelle' | 'chime' | 'apple_pay' | 'btc';
   updatedAt: string;
   createdAt: string;
 }

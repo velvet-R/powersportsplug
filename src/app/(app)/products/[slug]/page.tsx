@@ -224,12 +224,17 @@ import ImageGallery from '@/components/product/ProductDetails/ImageGallery'
 import ProductSpecsAndInfo from '@/components/product/ProductDetails/ProductSpecsAndInfo'
 
 import { getProductBySlug } from '@/lib/payload/products'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Script from 'next/script'
 
 import React from 'react'
+
+const SITE_URL = 'https://www.powersportsplug.com'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -246,12 +251,49 @@ export async function generateMetadata({ params }: PageProps) {
     return {
       title: 'Product Not Found | Powersports Plug',
       description: 'The product you are looking for does not exist.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     }
   }
 
+  const title = `${product.year} ${product.brand} ${product.title} — ${product.condition}`
+  const description = `${product.condition} ${product.year} ${product.brand} ${product.title}. ${product.price ? `$${product.price.toLocaleString()}` : 'Call for price'}. STK# ${product.stockNumber}. No credit check financing available. Nationwide delivery to all 50 states.`
+  const imageUrl = product.images?.[0] ?? `${SITE_URL}/og-default.jpg`
+  const productUrl = `${SITE_URL}/products/${slug}`
+
   return {
-    title: `${product.title} | Powersports Plug`,
-    description: product.description,
+    title,
+    description,
+    alternates: {
+      canonical: productUrl, // CRITICAL — prevents duplicate content from filters/pagination
+    },
+    openGraph: {
+      type: 'website',
+      url: productUrl,
+      title,
+      description,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${product.year} ${product.brand} ${product.title}`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
+    // In stock = index, sold out = still index but lower signal
+    robots: {
+      index: true,
+      follow: true,
+    },
   }
 }
 
@@ -267,38 +309,159 @@ export default async function ProductDetailsRoutePage({
   }
 
   return (
-    <div className="min-h-screen bg-background text-white selection:bg-primary-hover selection:text-white pb-24">
-      {/* BREADCRUMB HISTORY STRIP */}
-      <nav className="w-full border-b border-border/50 bg-zinc-950/60 py-4">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 lg:px-16 flex items-center justify-between">
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-1.5 font-display text-[10px] font-black uppercase tracking-wider text-zinc-400 hover:text-primary-hover transition-colors group"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-            Return To Catalog Fleet
-          </Link>
+    <>
+      <ProductSchema product={product} />
+      <BreadcrumbSchema product={product} />
 
-          <span className="font-mono text-[10px] text-zinc-600">STOCK#: {product.stockNumber}</span>
-        </div>
-      </nav>
+      <div className="min-h-screen bg-background text-white selection:bg-primary-hover selection:text-white pb-24">
+        {/* BREADCRUMB HISTORY STRIP */}
+        <nav className="w-full border-b border-border/50 bg-zinc-950/60 py-4">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 lg:px-16 flex items-center justify-between">
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-1.5 font-display text-[10px] font-black uppercase tracking-wider text-zinc-400 hover:text-primary-hover transition-colors group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+              Return To Catalog Fleet
+            </Link>
 
-      {/* CORE FRAMEWORK CONTAINER */}
-      <main className="max-w-screen-2xl mx-auto px-4 sm:px-8 lg:px-16 mt-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-14 items-start">
-          {/* LEFT SECTION */}
-          <div className="lg:col-span-7 space-y-12">
-            <ImageGallery images={product.images} title={product.title} />
-
-            <ProductSpecsAndInfo product={product} />
+            <span className="font-mono text-[10px] text-zinc-600">
+              STOCK#: {product.stockNumber}
+            </span>
           </div>
+        </nav>
 
-          {/* RIGHT SECTION */}
-          <div className="lg:col-span-5">
-            <FinancingActionCard product={product} />
+        {/* CORE FRAMEWORK CONTAINER */}
+        <main className="max-w-screen-2xl mx-auto px-4 sm:px-8 lg:px-16 mt-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-14 items-start">
+            {/* LEFT SECTION */}
+            <div className="lg:col-span-7 space-y-12">
+              <ImageGallery images={product.images} title={product.title} />
+
+              <ProductSpecsAndInfo product={product} />
+            </div>
+
+            {/* RIGHT SECTION */}
+            <div className="lg:col-span-5">
+              <FinancingActionCard product={product} />
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   )
+}
+
+// ── JSON-LD Product Schema ──
+// This enables Google rich results (price, availability, ratings in search results)
+function ProductSchema({ product }: { product: any }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${product.year} ${product.brand} ${product.title}`,
+    description:
+      product.description ||
+      `${product.condition} ${product.year} ${product.brand} ${product.title}`,
+    sku: product.stockNumber,
+    brand: {
+      '@type': 'Brand',
+      name: product.brand,
+    },
+    image: product.images?.map((img: any) => img.url) ?? [],
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: product.price,
+      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      availability:
+        product.status === 'available'
+          ? 'https://schema.org/InStock'
+          : product.status === 'on-order'
+            ? 'https://schema.org/PreOrder'
+            : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'PowersportsPlug',
+        url: SITE_URL,
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'USD',
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'US',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          businessDays: {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          },
+          cutoffTime: '17:00:00',
+          handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' },
+          transitTime: { '@type': 'QuantitativeValue', minValue: 3, maxValue: 10, unitCode: 'DAY' },
+        },
+      },
+    },
+    vehicleIdentificationNumber: product.vin ?? undefined,
+    modelDate: product.year,
+    mileageFromOdometer: product.mileage
+      ? { '@type': 'QuantitativeValue', value: product.mileage, unitCode: 'SMI' }
+      : undefined,
+    itemCondition:
+      product.condition === 'New'
+        ? 'https://schema.org/NewCondition'
+        : 'https://schema.org/UsedCondition',
+  }
+
+  return (
+    <Script
+      id="product-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
+// ── Breadcrumb JSON-LD ──
+function BreadcrumbSchema({ product }: { product: any }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Shop', item: `${SITE_URL}/shop` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: `${product.year} ${product.brand} ${product.title}`,
+        item: `${SITE_URL}/products/${product.slug}`,
+      },
+    ],
+  }
+
+  return (
+    <Script
+      id="breadcrumb-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
+// Pre-generate all product pages at build time for maximum performance
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const products = await payload.find({
+    collection: 'products',
+    where: { _status: { equals: 'published' } },
+    limit: 10000,
+    depth: 0,
+    select: { slug: true },
+  })
+  return products.docs.map((p) => ({ slug: p.slug }))
 }
