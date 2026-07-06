@@ -103,7 +103,7 @@ export const metadata: Metadata = {
 
   // Verification tokens — fill in after setting up each tool
   verification: {
-    google: 'YOUR_GOOGLE_SEARCH_CONSOLE_TOKEN', // from Google Search Console
+    google: 'Jn8QiC64XvmwNrlk1UTO4cKNxLpmdxcGbSqnvkq18HQ', // from Google Search Console
     // bing: 'YOUR_BING_TOKEN',
   },
 
