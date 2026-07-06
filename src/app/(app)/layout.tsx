@@ -5,6 +5,7 @@ import WhatsAppWidget from '@/components/WhatsappAppWidget'
 import { CompanyInfo } from '@/payload-types'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import configPromise from '@payload-config'
 import { Analytics } from '@vercel/analytics/next'
 import { GeistMono } from 'geist/font/mono'
@@ -85,7 +86,7 @@ export const metadata: Metadata = {
     'powersports dealer',
     'dirt bike for sale',
     'ATV financing bad credit',
-    'Yamaha Bashee for sale',
+    'Yamaha Banshee for sale',
   ],
 
   // Prevents admin/api routes from being indexed (set per-page for public pages)
@@ -139,6 +140,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <InitTheme />
       </head>
       <body className="bg-background text-foreground min-h-screen" suppressHydrationWarning>
+        <GoogleAnalytics gaId="G-V0N137W5F3" />
         <Providers companyInfo={companyInfo}>
           {/* <AdminBar />
           <LivePreviewListener /> */}
