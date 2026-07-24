@@ -1,4 +1,4 @@
-// src/collections/QuoteRequests.ts
+// src/collections/Quote.ts
 import { CollectionConfig } from 'payload'
 
 export const SalesInquiries: CollectionConfig = {
@@ -16,14 +16,18 @@ export const SalesInquiries: CollectionConfig = {
     { name: 'phone', type: 'text', required: true },
     { name: 'location', type: 'text', required: true },
     { name: 'message', type: 'textarea' },
+
+    // Optional fields with defaults — completely safe for live database
+    { name: 'shippingFee', type: 'number', defaultValue: 0 },
+    { name: 'totalAmount', type: 'number', defaultValue: 0 },
+
     {
       name: 'products',
-      type: 'array', // Store the items requested
+      type: 'array',
       fields: [
         { name: 'productTitle', type: 'text' },
         { name: 'productId', type: 'number' },
         { name: 'quantity', type: 'number' },
-
         { name: 'price', type: 'number' },
         { name: 'downPayment', type: 'number' },
         { name: 'estimatedPayment', type: 'number' },
@@ -47,7 +51,6 @@ export const SalesInquiries: CollectionConfig = {
       ],
     },
     {
-      // 2. New field to capture the specific payment channel
       name: 'paymentMethod',
       type: 'select',
       label: 'Preferred Payment Channel',
@@ -66,14 +69,21 @@ export const SalesInquiries: CollectionConfig = {
     afterChange: [
       async ({ doc, operation, req }) => {
         if (operation === 'create') {
+          // Compute fallback values safely if undefined
+          const shipping = doc.shippingFee ?? 0
+          const total = doc.totalAmount ?? 0
+
           await req.payload.sendEmail({
             to: 'tysonsmilton@gmail.com, sales@powersportsplug.com',
+            // to: 'brandonichami@gmail.com',
             subject: `New Sales Inquiry from ${doc.customerName}`,
             html: `
               <h1>New Sales Inquiry</h1>
               <div style="background: #f4f4f4; padding: 10px; margin-bottom: 20px;">
                 <p><strong>Payment Plan:</strong> ${doc.paymentPlan === 'full' ? 'Full Payment' : 'Monthly Financing'}</p>
-                <p><strong>Method:</strong> ${doc.paymentMethod.replace('_', ' ').toUpperCase()}</p>
+                <p><strong>Method:</strong> ${doc.paymentMethod ? doc.paymentMethod.replace('_', ' ').toUpperCase() : 'N/A'}</p>
+                <p><strong>Freight Shipping:</strong> $${shipping.toLocaleString()}</p>
+                <p><strong>Estimated Total:</strong> $${total.toLocaleString()}</p>
               </div>
               <p><strong>Name:</strong> ${doc.customerName}</p>
               <p><strong>Email:</strong> ${doc.email}</p>
@@ -81,13 +91,13 @@ export const SalesInquiries: CollectionConfig = {
               <p><strong>Location:</strong> ${doc.location}</p>
               <p><strong>Message:</strong> ${doc.message || 'N/A'}</p>
               <h2>Requested Products</h2>
-              <table border="1" cellpadding="10">
+              <table border="1" cellpadding="10" style="border-collapse: collapse;">
                 <tr><th>Image</th><th>Product</th><th>Price</th><th>Down</th><th>Mo.</th></tr>
                 ${doc.products
-                  .map(
-                    (p) => `
+                  ?.map(
+                    (p: any) => `
                   <tr>
-                    <td><img src="${p.image.startsWith('http') ? p.image : 'https://powersportsplug.com' + p.image}" width="50" /></td>
+                    <td><img src="${p.image && p.image.startsWith('http') ? p.image : 'https://powersportsplug.com' + (p.image || '')}" width="50" /></td>
                     <td>${p.productTitle} (Qty: ${p.quantity})</td>
                     <td>$${p.price}</td>
                     <td>$${p.downPayment}</td>

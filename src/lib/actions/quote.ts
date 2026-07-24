@@ -3,15 +3,19 @@
 import { getProductsByIds } from '@/lib/payload/products'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { toast } from 'sonner'
 
 export async function submitQuoteAction(prevState: any, formData: FormData) {
   const payload = await getPayload({ config: configPromise })
 
-  const cartItems = JSON.parse(formData.get('cartItems') as string)
+  const rawCartItems = formData.get('cartItems') as string
+  if (!rawCartItems) {
+    return { success: false, error: 'Cart items are missing.' }
+  }
+
+  const cartItems = JSON.parse(rawCartItems)
   const ids = cartItems.map((i: any) => i.productId)
 
-  // Fetch full details
+  // Fetch full product details
   const products = await getProductsByIds(ids)
 
   const productsWithDetails = cartItems.map((item: any) => {
@@ -26,6 +30,10 @@ export async function submitQuoteAction(prevState: any, formData: FormData) {
       image: detail?.images?.[0] || '',
     }
   })
+
+  // Extract shipping and total calculated by the client form
+  const shippingFee = Number(formData.get('shippingFee')) || 0
+  const totalAmount = Number(formData.get('totalAmount')) || 0
 
   try {
     const paymentPlan = formData.get('paymentPlan') as 'full' | 'financing' | undefined
@@ -43,8 +51,10 @@ export async function submitQuoteAction(prevState: any, formData: FormData) {
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
       location: formData.get('location') as string,
-      message: formData.get('message') as string,
+      message: (formData.get('message') as string) || '',
       status: 'new',
+      shippingFee,
+      totalAmount,
       products: productsWithDetails,
     }
 
@@ -59,7 +69,10 @@ export async function submitQuoteAction(prevState: any, formData: FormData) {
 
     return { success: true, id: newInquiry.id }
   } catch (error) {
-    toast.error('Failed to submit quote request.')
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    console.error('Error submitting sales inquiry:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred.',
+    }
   }
 }

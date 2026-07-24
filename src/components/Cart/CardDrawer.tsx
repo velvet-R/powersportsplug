@@ -2,11 +2,13 @@
 import { getProductsByIdsAction } from '@/lib/actions/products'
 import { useCartStore } from '@/store/cart-store'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FileText, Minus, Package, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
+import { FileText, Minus, Package, Plus, ShoppingBag, Trash2, Truck, X } from 'lucide-react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import SalesInquiryForm from '../forms/Quotes/SalesInquiries'
+
+const SHIPPING_FEE_PER_UNIT = 250
 
 export default function CartDrawer() {
   const { items, removeItem, increaseQty, decreaseQty, isDrawerOpen, toggleDrawer, view, setView } =
@@ -15,47 +17,43 @@ export default function CartDrawer() {
   const [products, setProducts] = useState<any[]>([])
   const pathname = usePathname()
 
-  // Reset to 'cart' view whenever the drawer is closed
   useEffect(() => {
     if (!isDrawerOpen) setView('cart')
   }, [isDrawerOpen])
 
   useEffect(() => {
-    // If the path changes and the drawer is open, close it
-    if (isDrawerOpen) {
-      toggleDrawer()
-    }
-  }, [pathname]) // Runs every time the URL changes
+    if (isDrawerOpen) toggleDrawer()
+  }, [pathname])
 
   useEffect(() => {
     const fetchItems = async () => {
       if (items.length === 0) return
-
-      // Get IDs from store
       const ids = items.map((i) => i.productId)
-
-      // Fetch only what we need
       const data = await getProductsByIdsAction(ids)
       setProducts(data)
     }
 
     if (isDrawerOpen) fetchItems()
-  }, [isDrawerOpen, items]) // Re-run if drawer opens or items change
+  }, [isDrawerOpen, items])
 
   const getProduct = (id: number) => products.find((p) => p.id === id)
 
-  // Calculate Subtotal
+  // 1. Calculate Total Units & Subtotal
+  const totalUnits = items.reduce((acc, item) => acc + item.quantity, 0)
+  const shippingFee = totalUnits * SHIPPING_FEE_PER_UNIT
+
   const subtotal = items.reduce((acc, item) => {
     const product = getProduct(item.productId)
     return acc + (product?.price || 0) * item.quantity
   }, 0)
+
+  const grandTotal = subtotal + shippingFee
 
   if (!isDrawerOpen) return null
 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex justify-end">
-        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -64,7 +62,6 @@ export default function CartDrawer() {
           className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         />
 
-        {/* Drawer */}
         <motion.div
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
@@ -85,9 +82,7 @@ export default function CartDrawer() {
           ) : items.length === 0 ? (
             <div className="h-[60vh] flex flex-col items-center justify-center text-center space-y-4">
               <ShoppingBag className="w-12 h-12 text-zinc-800" />
-
               <p className="text-zinc-500 font-medium">Your cart is empty.</p>
-
               <button
                 onClick={toggleDrawer}
                 className="text-primary-hover font-bold text-sm underline"
@@ -97,10 +92,9 @@ export default function CartDrawer() {
             </div>
           ) : (
             <>
-              <div className="space-y-6 overflow-y-auto max-h-[60vh] pr-2">
+              <div className="space-y-6 overflow-y-auto max-h-[52vh] pr-2">
                 {items.map((item) => {
                   const product = getProduct(item.productId)
-
                   if (!product) return null
 
                   return (
@@ -182,16 +176,30 @@ export default function CartDrawer() {
                 })}
               </div>
 
-              <div className="absolute bottom-6 left-6 right-6 pt-6 border-t border-zinc-800">
-                <div className="flex justify-between text-white font-black mb-4">
-                  <span>Estimated Total:</span>
+              {/* 2. Clear Breakdown Section */}
+              <div className="absolute bottom-6 left-6 right-6 pt-4 border-t border-zinc-800 bg-zinc-950 space-y-2">
+                <div className="flex justify-between text-xs text-zinc-400">
+                  <span>Vehicles Subtotal:</span>
+                  <span className="text-white font-medium">${subtotal.toLocaleString()}</span>
+                </div>
 
-                  <span className="text-primary-hover text-lg">${subtotal.toLocaleString()}</span>
+                <div className="flex justify-between text-xs text-zinc-400">
+                  <span className="flex items-center gap-1">
+                    <Truck className="w-3.5 h-3.5 text-zinc-500" />
+                    Flat Freight Shipping ({totalUnits} {totalUnits === 1 ? 'unit' : 'units'} × $
+                    {SHIPPING_FEE_PER_UNIT}):
+                  </span>
+                  <span className="text-white font-medium">${shippingFee.toLocaleString()}</span>
+                </div>
+
+                <div className="flex justify-between text-white font-black pt-2 border-t border-zinc-800">
+                  <span>Estimated Total:</span>
+                  <span className="text-primary-hover text-lg">${grandTotal.toLocaleString()}</span>
                 </div>
 
                 <button
                   onClick={() => setView('quote')}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-primary-hover rounded text-white shadow-md shadow-primary-hover/10 hover:bg-primary hover:text-secondary hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 font-bold uppercase tracking-widest text-[11px]"
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-primary-hover rounded text-white shadow-md shadow-primary-hover/10 hover:bg-primary hover:text-secondary hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 font-bold uppercase tracking-widest text-[11px] mt-2"
                 >
                   <FileText className="w-4 h-4" />
                   Request Quote For All

@@ -1071,6 +1071,8 @@ export interface SalesInquiry {
   phone: string;
   location: string;
   message?: string | null;
+  shippingFee?: number | null;
+  totalAmount?: number | null;
   products?:
     | {
         productTitle?: string | null;
@@ -1560,6 +1562,8 @@ export interface SalesInquiriesSelect<T extends boolean = true> {
   phone?: T;
   location?: T;
   message?: T;
+  shippingFee?: T;
+  totalAmount?: T;
   products?:
     | T
     | {

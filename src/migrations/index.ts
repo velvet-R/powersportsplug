@@ -11,6 +11,7 @@ import * as migration_20260615_230500_financing from './20260615_230500_financin
 import * as migration_20260616_000009_contact_inquiries from './20260616_000009_contact_inquiries';
 import * as migration_20260616_001123_quote_request from './20260616_001123_quote_request';
 import * as migration_20260616_005038 from './20260616_005038';
+import * as migration_20260724_183354 from './20260724_183354';
 
 export const migrations = [
   {
@@ -76,6 +77,11 @@ export const migrations = [
   {
     up: migration_20260616_005038.up,
     down: migration_20260616_005038.down,
-    name: '20260616_005038'
+    name: '20260616_005038',
+  },
+  {
+    up: migration_20260724_183354.up,
+    down: migration_20260724_183354.down,
+    name: '20260724_183354'
   },
 ];
