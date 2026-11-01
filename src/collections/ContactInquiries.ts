@@ -20,7 +20,7 @@ export const ContactInquiries: CollectionConfig = {
         if (operation === 'create') {
           try {
             await req.payload.sendEmail({
-              to: 'tysonsmilton@gmail.com, sales@powersportsplug.com', // Admin destination email
+              to: 'isaacmesengi4@gmail.com, sales@powersportsplug.com', // Admin destination email
               from: 'sales@powersportsplug.com', // Using the stable bypass address for now
               subject: `📩 New Contact Inquiry [${doc.interest.toUpperCase()}]: ${doc.firstName} ${doc.lastName}`,
               html: `

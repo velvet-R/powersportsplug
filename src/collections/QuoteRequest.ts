@@ -20,7 +20,7 @@ export const QuoteRequests: CollectionConfig = {
         if (operation === 'create') {
           try {
             await req.payload.sendEmail({
-              to: 'tysonsmilton@gmail.com, sales@powersportsplug.com',
+              to: 'isaacmesengi4@gmail.com, sales@powersportsplug.com',
               from: 'sales@powersportsplug.com', // Continuous verification bypass
               subject: `🔥 New Free Quote Request [${doc.category}]: ${doc.firstName} ${doc.lastName}`,
               html: `

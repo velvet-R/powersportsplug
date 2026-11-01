@@ -74,7 +74,7 @@ export const SalesInquiries: CollectionConfig = {
           const total = doc.totalAmount ?? 0
 
           await req.payload.sendEmail({
-            to: 'tysonsmilton@gmail.com, sales@powersportsplug.com',
+            to: 'isaacmesengi4@gmail.com, sales@powersportsplug.com',
             // to: 'brandonichami@gmail.com',
             subject: `New Sales Inquiry from ${doc.customerName}`,
             html: `
